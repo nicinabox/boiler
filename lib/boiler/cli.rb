@@ -28,12 +28,20 @@ module Boiler
       end
 
       status 'Packaging'
-      pack dest
+      packed_name = pack dest
 
-      # TODO: move to /boot/extra
-      # TODO: run installpkg
+      if /unraid/i =~ `uname -a`.strip
+        FileUtils.mkdir_p '/boot/extra'
+        FileUtils.mv "#{packed_name}.tgz", '/boot/extra'
 
-      status 'Installed!', :green
+        status 'Installing'
+        `installpkg /boot/extra/#{packed_name}.tgz`
+
+        status 'Installed!', :green
+      else
+        status 'Not extracting.', :yellow
+      end
+
     end
 
     desc 'register NAME URL', 'Register a package'

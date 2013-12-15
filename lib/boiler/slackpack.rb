@@ -76,6 +76,7 @@ module Boiler
       gzip(tmp_dir, name)
 
       FileUtils.rm_rf tmp_dir
+      name
     end
 
   end

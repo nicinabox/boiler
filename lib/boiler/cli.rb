@@ -111,6 +111,15 @@ module Boiler
       end
     end
 
+    desc 'list', 'List installed packages'
+    def list
+      files = Dir.glob("/var/log/boiler/**/boiler.json")
+      files.each do |f|
+        config = JSON.parse File.read f
+        pretty_print [config['name'], config['description']]
+      end
+    end
+
     desc 'version', 'Prints version'
     def version
       puts ::Boiler::VERSION

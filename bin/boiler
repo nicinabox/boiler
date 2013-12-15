@@ -2,5 +2,5 @@
 
 $:.push File.expand_path("../../lib", __FILE__)
 
-require 'gat/cli'
-Gat::CLI.start(ARGV)
+require 'boiler/cli'
+Boiler::CLI.start(ARGV)

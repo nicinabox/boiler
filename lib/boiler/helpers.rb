@@ -2,7 +2,7 @@ require 'grit'
 require 'httparty'
 require 'fileutils'
 
-module Gat
+module Boiler
   module Helpers
     include Grit
 
@@ -15,7 +15,7 @@ module Gat
     end
 
     def tmp_repo(name)
-      "/tmp/gat/#{name}"
+      "/tmp/boiler/#{name}"
     end
 
     def clone_repo(name, url)
@@ -39,7 +39,7 @@ module Gat
     end
 
     def manifest(dest)
-      "#{dest}/gat.json"
+      "#{dest}/boiler.json"
     end
 
     def cleanup(dest)

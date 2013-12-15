@@ -1,13 +1,13 @@
 require 'thor'
-require 'gat/helpers'
+require 'boiler/helpers'
 
-module Gat
+module Boiler
   class CLI < Thor
     include HTTParty
     include Grit
-    include Gat::Helpers
+    include Boiler::Helpers
 
-    base_uri 'http://gat-registry.herokuapp.com'
+    base_uri 'http://boiler-registry.herokuapp.com'
     format :json
 
     desc 'install NAME', 'Install a package by name'
@@ -57,7 +57,7 @@ module Gat
       dest = clone_repo(name, url)
 
       unless manifest_exists? dest
-        status 'Package is missing gat.json', :red
+        status 'Package is missing boiler.json', :red
         cleanup dest
         abort
       end

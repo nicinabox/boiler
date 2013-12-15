@@ -30,7 +30,7 @@ module Boiler
       status 'Packaging'
       packed_name = pack dest
 
-      if /unraid/i =~ `uname -a`.strip
+      if unraid?
         FileUtils.mkdir_p '/boot/extra'
         FileUtils.mv "#{packed_name}.tgz", '/boot/extra'
 
@@ -39,7 +39,7 @@ module Boiler
 
         status 'Installed!', :green
       else
-        status 'Not extracting.', :yellow
+        status "Can't install. Not an unRAID machine.", :yellow
       end
 
     end

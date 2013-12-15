@@ -14,6 +14,10 @@ module Boiler
       say "=> #{message}", color
     end
 
+    def unraid?
+      /unraid/i =~ `uname -a`.strip
+    end
+
     def tmp_repo(name)
       "/tmp/boiler/#{name}"
     end

@@ -1,7 +1,9 @@
-require 'find'
+require 'boiler/helpers'
 
 module Boiler
   module Slackpack
+    include Boiler::Helpers
+
     def defaults
       {
         arch: 'noarch',
@@ -27,7 +29,15 @@ module Boiler
     end
 
     def gzip(src, name)
-      `tar czfP #{name}.tgz #{src}`
+      if unraid?
+        current_dir = `pwd`
+
+        `cd #{src} &&
+         makepkg -l -c y ../#{name}.tgz &&
+         mv ../#{name}.tgz #{current_dir}`
+      else
+        `tar czfP #{name}.tgz #{src}`
+      end
     end
 
     def prefix_files(dir, config)

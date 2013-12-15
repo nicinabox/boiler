@@ -1,6 +1,7 @@
 require 'grit'
 require 'httparty'
 require 'fileutils'
+require 'deep_merge'
 
 module Boiler
   module Helpers

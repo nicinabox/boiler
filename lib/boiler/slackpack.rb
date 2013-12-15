@@ -82,9 +82,11 @@ module Boiler
     end
 
     def create_package(src)
-      config = defaults.merge(JSON.parse(File.read(manifest(src)), {
+      config = JSON.parse(File.read(manifest(src)), {
         :symbolize_names => true
-      }))
+      })
+
+      config = defaults(config[:name]).deep_merge(config)
 
       name = package_name(config)
       tmp_dir = "/tmp/boiler/#{name}"

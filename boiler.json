@@ -1,6 +1,7 @@
 {
   "name": "boiler",
   "version": "0.1.0",
+  "description": "A package manager for unRAID addons",
   "dependencies": {
     "git": "~1.8.4",
     "ruby": ">=1.9.3"

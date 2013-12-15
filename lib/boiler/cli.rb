@@ -116,7 +116,7 @@ module Boiler
       files = Dir.glob("/var/log/boiler/**/boiler.json")
       files.each do |f|
         config = JSON.parse File.read f
-        pretty_print [config['name'], config['description']]
+        pretty_print ["#{config['name']} (#{config['version']})", config['description']]
       end
     end
 

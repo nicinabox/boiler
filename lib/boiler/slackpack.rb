@@ -71,6 +71,14 @@ module Boiler
       "#{c[:name]}-#{c[:version]}-#{c[:arch]}-#{c[:build]}"
     end
 
+    def setup_symlinks(tmp_dir, config)
+      config[:symlink].each do |src, dest|
+        FileUtils.mkdir_p "#{tmp_dir}/install"
+
+        `echo "ln -s #{src} #{dest}\n" >> "#{tmp_dir}/install/doinst.sh"`
+      end if config[:symlink]
+    end
+
     def pack(src)
       config = defaults.merge(JSON.parse(File.read(manifest(src)), {
         :symbolize_names => true
@@ -80,6 +88,7 @@ module Boiler
       tmp_dir = "/tmp/boiler/#{name}"
 
       copy_files_to_tmp src, tmp_dir, config
+      setup_symlinks tmp_dir, config
       prefix_files tmp_dir, config
       gzip(tmp_dir, name)
 

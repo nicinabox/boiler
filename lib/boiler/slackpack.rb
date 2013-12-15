@@ -79,7 +79,7 @@ module Boiler
       end if config[:symlink]
     end
 
-    def pack(src)
+    def create_package(src)
       config = defaults.merge(JSON.parse(File.read(manifest(src)), {
         :symbolize_names => true
       }))

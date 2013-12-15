@@ -13,6 +13,11 @@ module Boiler
     base_uri 'http://boiler-registry.herokuapp.com'
     format :json
 
+    desc 'pack DIR', 'Pack a directory for distribution'
+    def pack(dir)
+      create_package dir
+    end
+
     desc 'install NAME', 'Install a package by name'
     def install(name_or_url)
       status "Downloading #{name_or_url}"
@@ -28,7 +33,7 @@ module Boiler
       end
 
       status 'Packaging'
-      packed_name = pack dest
+      packed_name = create_package dest
 
       if unraid?
         FileUtils.mkdir_p '/boot/extra'

@@ -1,6 +1,10 @@
 #!/usr/bin/env ruby
 
-$:.push File.expand_path("../../lib", __FILE__)
+require "pathname"
+bin_file = Pathname.new(__FILE__).realpath
+
+# add self to libpath
+$:.unshift File.expand_path("../../lib", bin_file)
 
 require 'boiler/cli'
 Boiler::CLI.start(ARGV)

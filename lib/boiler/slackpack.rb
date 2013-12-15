@@ -30,11 +30,9 @@ module Boiler
       current_dir = `pwd`
 
       if unraid?
-        `cd #{src} &&
-         makepkg -l -c y ../#{name}.tgz`
+        `cd #{src} && makepkg -c y ../#{name}.tgz`
       else
-        `cd #{src} &&
-         tar -czf ../#{name}.tgz .`
+        `cd #{src} && tar -czf ../#{name}.tgz .`
       end
 
       `mv /tmp/boiler/#{name}.tgz #{current_dir}`

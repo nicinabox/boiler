@@ -27,15 +27,17 @@ module Boiler
     end
 
     def gzip(src, name)
-      if unraid?
-        current_dir = `pwd`
+      current_dir = `pwd`
 
+      if unraid?
         `cd #{src} &&
-         makepkg -l -c y ../#{name}.tgz &&
-         mv ../#{name}.tgz #{current_dir}`
+         makepkg -l -c y ../#{name}.tgz`
       else
-        `tar czfP #{name}.tgz #{src}`
+        `cd #{src} &&
+         tar -czf ../#{name}.tgz .`
       end
+
+      `mv /tmp/boiler/#{name}.tgz #{current_dir}`
     end
 
     def prefix_files(dir, config)

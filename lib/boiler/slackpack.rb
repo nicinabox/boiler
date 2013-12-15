@@ -46,7 +46,7 @@ module Boiler
         FileUtils.mkdir_p dest
         srcs.each do |src|
           fullpath = "#{dir}/#{src}"
-          FileUtils.mv fullpath, dest
+          FileUtils.mv Dir.glob(fullpath), dest
         end
       end if config[:prefix]
     end

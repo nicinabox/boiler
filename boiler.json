@@ -8,7 +8,7 @@
 
   "ignore": ["install.sh"],
   "prefix": {
-    "usr/local/boiler": ["bin", "lib", "Gemfile*"],
+    "usr/local/boiler": ["bin", "lib", "Gemfile", "Gemfile.lock"],
     "usr/docs/boiler": ["README.md"]
   },
 

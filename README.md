@@ -2,7 +2,7 @@
 
 ## Install
 
-    wget -qO- --no-check-certificate https://raw.github.com/nicinabox/trolley/master/install.sh | sh -
+    wget -qO- --no-check-certificate https://raw.github.com/nicinabox/boiler/master/install.sh | sh -
 
 ## Usage
 

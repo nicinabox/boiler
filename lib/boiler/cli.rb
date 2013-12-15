@@ -1,4 +1,5 @@
 require 'thor'
+require 'boiler/version'
 require 'boiler/helpers'
 
 module Boiler
@@ -87,5 +88,9 @@ module Boiler
       end
     end
 
+    desc 'version', 'Prints version'
+    def version
+      puts ::Boiler::VERSION
+    end
   end
 end

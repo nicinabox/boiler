@@ -33,7 +33,7 @@ module Gat
       status 'Installed!', :green
     end
 
-    desc 'register NAME ENDPOINT', 'Register a package'
+    desc 'register NAME URL', 'Register a package'
     def register(name, url)
       unless git_protocol? url
         status 'Url must use git:// protocol', :red

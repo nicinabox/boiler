@@ -1,11 +1,13 @@
 require 'thor'
-require 'boiler/version'
+require 'boiler/slackpack'
 require 'boiler/helpers'
+require 'boiler/version'
 
 module Boiler
   class CLI < Thor
     include HTTParty
     include Grit
+    include Boiler::Slackpack
     include Boiler::Helpers
 
     base_uri 'http://boiler-registry.herokuapp.com'
@@ -20,13 +22,13 @@ module Boiler
         package = self.class.get(url)
         dest = clone_repo(`basename #{url}`, url)
       else
+        name = name_or_url
         package = self.class.get("/packages/#{name}?install=true")
         dest = clone_repo(package['name'], package['url'])
       end
 
       status 'Packaging'
-      # TODO: pack with slackpack or fallback on makepkg
-      `slackpack #{dest}`
+      pack dest
 
       # TODO: move to /boot/extra
       # TODO: run installpkg
@@ -61,6 +63,14 @@ module Boiler
         status 'Package is missing boiler.json', :red
         cleanup dest
         abort
+      end
+
+      metadata = JSON.parse File.read manifest(dest)
+      required.each do |key|
+        unless metadata.has_key? key
+          status "boiler.json requires #{key}"
+          abort
+        end
       end
 
       status "Registering"

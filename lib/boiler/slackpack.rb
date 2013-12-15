@@ -20,12 +20,10 @@ module Boiler
     end
 
     def run_tasks(tmp, config)
-      if config.include? :tasks
-        config[:tasks].each do |task|
-          status "Running #{task}"
-          `#{task}`
-        end
-      end
+      config[:tasks].each do |task|
+        status "Running #{task}"
+        `#{task}`
+      end if config[:tasks]
     end
 
     def gzip(src, name)
@@ -48,7 +46,7 @@ module Boiler
           fullpath = "#{dir}/#{src}"
           FileUtils.mv fullpath, dest
         end
-      end
+      end if config[:prefix]
     end
 
     # Does not copy files beginning with dot!

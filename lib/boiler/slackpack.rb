@@ -4,15 +4,15 @@ module Boiler
   module Slackpack
     include Boiler::Helpers
 
-    def defaults
+    def defaults(name)
       {
         arch: 'noarch',
-        build: 'unraid'
+        build: 'unraid',
+        prefix: {
+          :"usr/docs/#{name}" => ['README.*'],
+          :"var/log/boiler/#{name}" => ['boiler.json']
+        }
       }
-    end
-
-    def ignores
-      %w(.git)
     end
 
     def required

@@ -103,7 +103,7 @@ module Boiler
     end
 
     desc 'search NAME', 'Search for packages'
-    def search(fragment)
+    def search(fragment=nil)
       packages = self.class.get("/packages/search/#{fragment}")
 
       packages.each do |package|

@@ -1,3 +1,4 @@
+require 'bundler/setup'
 require 'thor'
 require 'boiler/slackpack'
 require 'boiler/helpers'

@@ -108,7 +108,7 @@ module Boiler
       packages = self.class.get("/packages/search/#{fragment}")
 
       packages.each do |package|
-        pretty_print [package['name'], package['url']]
+        print_in_columns [package['name'], package['url']]
       end
     end
 
@@ -117,7 +117,7 @@ module Boiler
       files = Dir.glob("/var/log/boiler/**/boiler.json")
       files.each do |f|
         config = JSON.parse File.read f
-        pretty_print ["#{config['name']} (#{config['version']})", config['description']]
+        print_in_columns [config['name'], config['version'], config['description']]
       end
     end
 

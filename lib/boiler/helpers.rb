@@ -7,10 +7,6 @@ module Boiler
   module Helpers
     include Grit
 
-    def pretty_print(args)
-      puts "%-20s %10s" % args
-    end
-
     def status(message, color = nil)
       say "=> #{message}", color
     end

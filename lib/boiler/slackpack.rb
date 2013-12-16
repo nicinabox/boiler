@@ -80,7 +80,7 @@ module Boiler
     def setup_dependencies(tmp_dir, config)
       if config[:dependencies]
         deps = config[:dependencies].map do |pkg, version|
-          "trolley #{pkg} #{version}"
+          "trolley install #{pkg} #{version}"
         end
 
         config[:post_install].unshift deps.join "\n"

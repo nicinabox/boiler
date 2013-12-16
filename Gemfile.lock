@@ -19,7 +19,6 @@ GEM
     json (1.8.1)
     mime-types (1.25.1)
     multi_xml (0.5.5)
-    outdent (0.2.0)
     posix-spawn (0.3.8)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
@@ -37,6 +36,5 @@ DEPENDENCIES
   deep_merge
   grit
   httparty
-  outdent
   rspec
   thor!

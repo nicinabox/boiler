@@ -1,6 +1,6 @@
 GIT
-  remote: git@github.com:erikhuda/thor.git
-  revision: 3dd0e8f59ee109963357a325caf8efa2dbb8264c
+  remote: git://github.com/erikhuda/thor.git
+  revision: 23ec5baa07afa463a1714f0e4f902d487dc56330
   specs:
     thor (0.18.1)
 

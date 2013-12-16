@@ -14,5 +14,9 @@
 
   "symlink": {
     "/usr/local/boiler/bin/boiler": "/usr/local/bin/boiler"
+  },
+
+  "post_install": {
+    "bundle": "bundle install --gemfile=/usr/local/boiler/Gemfile"
   }
 }

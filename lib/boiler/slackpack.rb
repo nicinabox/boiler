@@ -1,4 +1,5 @@
 require 'boiler/helpers'
+require 'outdent'
 
 module Boiler
   module Slackpack
@@ -73,10 +74,23 @@ module Boiler
 
     def setup_symlinks(tmp_dir, config)
       config[:symlink].each do |src, dest|
+        config[:post_install][:"symlink #{src}"] = "ln -s #{src} #{dest}"
+      end if config[:symlink]
+    end
+
+    def setup_post_install(tmp_dir, config)
+      config[:post_install].each do |name, cmd|
         FileUtils.mkdir_p "#{tmp_dir}/install"
 
-        `echo "ln -s #{src} #{dest}\n" >> "#{tmp_dir}/install/doinst.sh"`
-      end if config[:symlink]
+        File.open("#{tmp_dir}/install/doinst.sh", "a") do |f|
+          f << <<-CODE.outdent
+            # #{name}
+            #{cmd}
+
+          CODE
+        end
+
+      end if config[:post_install]
     end
 
     def create_package(src)
@@ -90,7 +104,10 @@ module Boiler
       tmp_dir = "/tmp/boiler/#{name}"
 
       copy_files_to_tmp src, tmp_dir, config
+
       setup_symlinks tmp_dir, config
+      setup_post_install tmp_dir, config
+
       prefix_files tmp_dir, config
       gzip(tmp_dir, name)
 

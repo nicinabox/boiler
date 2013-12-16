@@ -134,6 +134,14 @@ module Boiler
       end
     end
 
+    desc 'update NAME', 'Update package by name'
+    def update(name)
+      status 'Removing old package'
+      FileUtils.rm Dir.glob("/boot/extra/#{name}")
+
+      install name
+    end
+
     desc 'version', 'Prints version'
     def version
       puts ::Boiler::VERSION

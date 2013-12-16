@@ -121,6 +121,19 @@ module Boiler
       end
     end
 
+    desc 'init', 'Create a boiler.json in the current directory'
+    def init
+      config = {}
+
+      config[:name]    = ask "name:", default: File.basename(Dir.pwd)
+      config[:version] = ask "version:", default: '0.1.0'
+      config[:description] = ask "description:"
+
+      File.open("boiler.json","w") do |f|
+        f.write(JSON.pretty_generate(config))
+      end
+    end
+
     desc 'version', 'Prints version'
     def version
       puts ::Boiler::VERSION

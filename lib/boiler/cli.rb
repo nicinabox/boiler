@@ -49,6 +49,13 @@ module Boiler
 
     end
 
+    desc 'remove NAME', 'Remove (uninstall) a package'
+    def remove(name)
+      if unraid?
+        `removepkg #{name}`
+      end
+    end
+
     desc 'register NAME URL', 'Register a package'
     def register(name, url)
       unless git_protocol? url

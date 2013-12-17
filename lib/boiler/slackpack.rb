@@ -99,6 +99,8 @@ module Boiler
     end
 
     def create_package(src)
+      src.gsub!(/\/$/, '')
+
       config = JSON.parse(File.read(manifest(src)), {
         :symbolize_names => true
       })
@@ -117,7 +119,7 @@ module Boiler
       prefix_files tmp_dir, config
       gzip(tmp_dir, name)
 
-      FileUtils.rm_rf tmp_dir
+      FileUtils.rm_rf Dir.glob("/tmp/boiler/#{config[:name]}*")
       name
     end
 

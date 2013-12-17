@@ -17,12 +17,25 @@ module Boiler
       "/tmp/boiler/#{name}"
     end
 
-    def clone_repo(name, url)
+    def clone_repo(name, url, version=nil)
       dest = tmp_repo(name)
+      repo = nil
 
-      repo = Git.new(dest)
-      repo.clone({ :quiet => true }, url, dest)
-      dest
+      Dir.chdir("/tmp/boiler") do
+        `git clone --quiet -- #{url} #{name}`
+        repo = Rugged::Repository.new(dest)
+
+        tags = repo.tags.map { |t| t }
+        tags.sort! {|x, y| Gem::Version.new(x) <=> Gem::Version.new(y) }
+
+        version = tags.last unless version
+        `cd #{name} && git checkout --quiet #{version}`
+      end
+
+      {
+        repo: repo,
+        version: version
+      }
     end
 
     def public_repo?(url)

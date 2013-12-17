@@ -18,28 +18,28 @@ module Boiler
       create_package dir
     end
 
-    desc 'install NAME', 'Install a package by name'
-    def install(name_or_url)
+    desc 'install NAME [VERSION]', 'Install a package by name'
+    def install(name_or_url, version=nil)
       status "Downloading #{name_or_url}"
 
       if url? name_or_url
         url = name_or_url
         package = self.class.get(url)
-        dest = clone_repo(`basename #{url}`, url)
+        repo = clone_repo(`basename #{url}`, url, version)
       else
         name = name_or_url
         package = self.class.get("/packages/#{name}?install=true")
-        dest = clone_repo(package['name'], package['url'])
+        repo = clone_repo(package['name'], package['url'], version)
       end
 
-      status 'Packaging'
-      packed_name = create_package dest
+      status "Packaging #{repo[:version]}"
+      packed_name = create_package repo[:repo].workdir
 
       if unraid?
         FileUtils.mkdir_p '/boot/extra'
         FileUtils.mv "#{packed_name}.tgz", '/boot/extra'
 
-        status 'Installing'
+        status "Installing"
         `installpkg /boot/extra/#{packed_name}.tgz`
 
         status 'Installed!', :green
@@ -136,7 +136,7 @@ module Boiler
     desc 'update NAME', 'Update package by name'
     def update(name)
       status 'Removing old package'
-      FileUtils.rm Dir.glob("/boot/extra/#{name}")
+      FileUtils.rm Dir.glob("/boot/extra/#{name}*")
 
       install name
     end

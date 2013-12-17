@@ -99,7 +99,7 @@ module Boiler
     end
 
     def create_package(src)
-      src.gsub!(/\/$/, '')
+      src.gsub!(/\/$/, '') if /\/$/ =~ src
 
       config = JSON.parse(File.read(manifest(src)), {
         :symbolize_names => true

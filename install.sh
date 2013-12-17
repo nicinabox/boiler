@@ -1,17 +1,18 @@
 #!/bin/bash
 
 version=0.1.0
+name='boiler'
 
 # Make sure we've got an extras directory
 mkdir -p /boot/extra
 
 # Remove old file versions
-rm -rf /boot/extra/boiler*
+rm -rf /boot/extra/$name*
 
 # Download new
 wget -q --no-check-certificate \
-     -O /boot/extra/boiler-$version-noarch-unraid.tgz \
-     https://github.com/nicinabox/boiler/releases/download/$version/boiler-$version-noarch-unraid.tgz
+     -O /boot/extra/$name-$version-noarch-unraid.tgz \
+     https://github.com/nicinabox/$name/releases/download/$version/$name-$version-noarch-unraid.tgz
 
 # Install
-installpkg /boot/extra/boiler-$version-noarch-unraid.tgz
+installpkg /boot/extra/$name-$version-noarch-unraid.tgz

@@ -64,7 +64,19 @@ See this project's boiler.json for a working example.
 ## Todo
 
 * Tests
-* boiler info NAME
+* `boiler info NAME`
+* `boiler init` wizard defaults (not working through thor)
+* Try to convert non git:// urls, then fail
+
+## Contributing
+
+Boiler loves contributers!
+
+1. Fork it
+2. Create your feature branch (git checkout -b my-new-feature)
+3. Commit your changes (git commit -am 'Add some feature')
+4. Push to the branch (git push origin my-new-feature)
+5. Create new Pull Request
 
 ## License
 

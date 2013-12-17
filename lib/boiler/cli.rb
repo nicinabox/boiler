@@ -46,7 +46,6 @@ module Boiler
       else
         status "Can't install. Not an unRAID machine.", :yellow
       end
-
     end
 
     desc 'remove NAME', 'Remove (uninstall) a package'
@@ -115,7 +114,7 @@ module Boiler
       packages = self.class.get("/packages/search/#{fragment}")
 
       packages.each do |package|
-        print_in_columns [package['name'], package['url']]
+        two_columns package['name'], package['url']
       end
     end
 
@@ -124,7 +123,7 @@ module Boiler
       files = Dir.glob("/var/log/boiler/**/boiler.json")
       files.each do |f|
         config = JSON.parse File.read f
-        print_in_columns [config['name'], config['version'], config['description']]
+        three_columns config['name'], config['version'], config['description']
       end
     end
 

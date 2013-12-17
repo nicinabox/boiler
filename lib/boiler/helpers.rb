@@ -19,12 +19,13 @@ module Boiler
 
     def clone_repo(name, url, version=nil)
       dest = tmp_repo(name)
-      repo = nil
+      path = "/tmp/boiler"
 
       # Remove that directory before we create it
       FileUtils.rm_rf dest
+      FileUtils.mkdir_p path
 
-      g = Git.clone(url, name, :path => '/tmp/boiler')
+      g = Git.clone(url, name, :path => path)
       tags = g.lib.tags.sort {|x, y| Gem::Version.new(x) <=> Gem::Version.new(y) }
       version = tags.last unless version
       g.checkout version

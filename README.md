@@ -47,6 +47,10 @@ See this project's boiler.json for a working example.
 
 **description** [string] - A description of your package
 
+**authors** [array] - An array of authors. Supports Name <email> syntax.
+
+**license** [string] - Project license
+
 **dependencies** [string] - A hash of dependencies (`"openssl": ">=1.0.1c"`). Maybe use version constraints
 
 **ignore** [array] - Ignore files or directories when building the package
@@ -56,6 +60,11 @@ See this project's boiler.json for a working example.
 **symlink** [hash] - Define files to be symlinked on install
 
 **post_install** [array] - Define commands to run during post install
+
+## Todo
+
+* Tests
+* boiler info NAME
 
 ## License
 

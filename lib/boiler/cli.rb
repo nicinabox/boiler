@@ -77,7 +77,8 @@ module Boiler
         abort
       end
 
-      dest = clone_repo(name, url)
+      repo = clone_repo(name, url)
+      dest = repo[:repo].workdir
 
       unless manifest_exists? dest
         status 'Package is missing boiler.json', :red

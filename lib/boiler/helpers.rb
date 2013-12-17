@@ -21,6 +21,9 @@ module Boiler
       dest = tmp_repo(name)
       repo = nil
 
+      # Remove that directory before we create it
+      FileUtils.rm_rf dest
+
       Dir.chdir("/tmp/boiler") do
         `git clone --quiet -- #{url} #{name}`
         repo = Rugged::Repository.new(dest)

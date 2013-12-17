@@ -1,4 +1,4 @@
-require 'rugged'
+require 'git'
 require 'httparty'
 require 'fileutils'
 require 'deep_merge'

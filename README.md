@@ -2,6 +2,8 @@
 
 **/!\ boiler is not ready for production usage**
 
+![](http://i.minus.com/iPuI9DhwCn2cA.gif)
+
 ## Install
 
     wget -qO- --no-check-certificate https://raw.github.com/nicinabox/boiler/master/install.sh | sh -

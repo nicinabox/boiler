@@ -51,7 +51,7 @@ See this project's boiler.json for a working example.
 
 **license** [string] - Project license
 
-**dependencies** [string] - A hash of dependencies (`"openssl": ">=1.0.1c"`). Maybe use version constraints
+**dependencies** [string] - A hash of dependencies (`"openssl": ">=1.0.1c"`). May use version constraints
 
 **ignore** [array] - Ignore files or directories when building the package
 

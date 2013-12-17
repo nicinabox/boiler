@@ -7,7 +7,6 @@ require 'boiler/version'
 module Boiler
   class CLI < Thor
     include HTTParty
-    include Grit
     include Boiler::Slackpack
     include Boiler::Helpers
 

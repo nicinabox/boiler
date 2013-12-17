@@ -1,12 +1,10 @@
-require 'grit'
+require 'rugged'
 require 'httparty'
 require 'fileutils'
 require 'deep_merge'
 
 module Boiler
   module Helpers
-    include Grit
-
     def status(message, color = nil)
       say "=> #{message}", color
     end

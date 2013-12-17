@@ -32,8 +32,8 @@ module Boiler
         repo = clone_repo(package['name'], package['url'], version)
       end
 
-      status "Packaging #{repo[:version]}"
-      packed_name = create_package repo[:repo].workdir
+      status "Packaging #{version}"
+      packed_name = create_package repo.dir
 
       if unraid?
         FileUtils.mkdir_p '/boot/extra'
@@ -78,7 +78,7 @@ module Boiler
       end
 
       repo = clone_repo(name, url)
-      dest = repo[:repo].workdir
+      dest = repo.dir
 
       unless manifest_exists? dest
         status 'Package is missing boiler.json', :red

@@ -24,21 +24,12 @@ module Boiler
       # Remove that directory before we create it
       FileUtils.rm_rf dest
 
-      Dir.chdir("/tmp/boiler") do
-        `git clone --quiet -- #{url} #{name}`
-        repo = Rugged::Repository.new(dest)
+      g = Git.clone(url, name, :path => '/tmp/boiler')
+      tags = g.lib.tags.sort {|x, y| Gem::Version.new(x) <=> Gem::Version.new(y) }
+      version = tags.last unless version
+      g.checkout version
+      g
 
-        tags = repo.tags.map { |t| t }
-        tags.sort! {|x, y| Gem::Version.new(x) <=> Gem::Version.new(y) }
-
-        version = tags.last unless version
-        `cd #{name} && git checkout --quiet #{version}`
-      end
-
-      {
-        repo: repo,
-        version: version
-      }
     end
 
     def public_repo?(url)

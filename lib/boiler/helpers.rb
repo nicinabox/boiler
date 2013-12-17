@@ -55,5 +55,13 @@ module Boiler
     def url?(url)
       HTTParty.get(url).code == 200 rescue nil
     end
+
+    def name_and_email
+      "#{git_config('user.name')} <#{git_config('user.email')}>"
+    end
+
+    def git_config(key)
+      Git.global_config(key)
+    end
   end
 end

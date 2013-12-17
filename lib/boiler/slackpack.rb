@@ -73,7 +73,7 @@ module Boiler
 
     def setup_symlinks(tmp_dir, config)
       config[:symlink].each do |src, dest|
-        config[:post_install] << "ln -s #{src} #{dest}"
+        config[:post_install] << "ln -sf #{src} #{dest}"
       end if config[:symlink]
     end
 

@@ -1,12 +1,21 @@
 # boiler
 
+**/!\ boiler is not ready for production usage**
+
 ## Install
 
     wget -qO- --no-check-certificate https://raw.github.com/nicinabox/boiler/master/install.sh | sh -
 
 ## Usage
 
-Run `boiler help` for full usage.
+    init                    # Create a boiler.json in the current directory
+    install NAME [VERSION]  # Install a package by name
+    list                    # List installed packages
+    pack DIR                # Pack a directory for distribution
+    register NAME URL       # Register a package
+    remove NAME             # Remove (uninstall) a package
+    search NAME             # Search for packages
+    update NAME             # Update package by name
 
 ## License
 

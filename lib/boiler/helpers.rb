@@ -25,12 +25,10 @@ module Boiler
       FileUtils.rm_rf dest
       FileUtils.mkdir_p path
 
-      g = Git.clone(url, name, :path => path)
-      tags = g.lib.tags.sort {|x, y| Gem::Version.new(x) <=> Gem::Version.new(y) }
-      version = tags.last unless version
-      g.checkout version
-      g
-
+      repo = Git.clone(url, name, :path => path)
+      tags = repo.lib.tags.sort {|x, y| Gem::Version.new(x) <=> Gem::Version.new(y) }
+      repo.checkout (version ||= tags.last)
+      [repo, version]
     end
 
     def public_repo?(url)

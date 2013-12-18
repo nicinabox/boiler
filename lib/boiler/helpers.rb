@@ -25,6 +25,7 @@ module Boiler
     def unraid?
       /unraid/i =~ `uname -a`.strip
     end
+    module_function :unraid?
 
     def tmp_boiler
       "/tmp/boiler"

@@ -1,3 +1,5 @@
 module Boiler
-  VERSION = '0.1.0'
+  config = JSON.parse File.read "boiler.json"
+
+  VERSION = config['version']
 end

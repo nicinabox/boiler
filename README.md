@@ -68,11 +68,12 @@ See this project's boiler.json for a working example.
 ## Todo
 
 * Tests
-* `boiler info NAME`
+* `boiler info NAME` for installed packages
 * `boiler init` wizard defaults (not working through thor)
 * Try to convert non git:// urls, then fail
 * Robustness on install (thin dependencies if possible)
 * Better error reporting when something fails
+* Convert plgs accurately
 
 ## Contributing
 

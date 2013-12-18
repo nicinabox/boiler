@@ -1,7 +1,5 @@
 # boiler
 
-**/!\ boiler is not ready for production usage**
-
 ![](http://i.minus.com/iPuI9DhwCn2cA.gif)
 
 ## Install

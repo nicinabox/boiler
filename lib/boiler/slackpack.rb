@@ -120,7 +120,7 @@ module Boiler
       gzip(tmp_dir, name)
 
       FileUtils.rm_rf Dir.glob("/tmp/boiler/#{config[:name]}*")
-      name
+      name + '.tgz'
     end
 
   end

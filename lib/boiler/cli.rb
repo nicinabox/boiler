@@ -15,7 +15,14 @@ module Boiler
 
     desc 'pack DIR', 'Pack a directory for distribution'
     def pack(dir)
-      create_package dir
+      name = File.basename dir
+
+      status "Packing #{name}"
+
+      name = create_package dir
+
+      pkg = "#{Dir.pwd}/#{name}"
+      status "Done! Your package is at #{pkg}", :green
     end
 
     desc 'install NAME [VERSION]', 'Install a package by name'
@@ -37,10 +44,10 @@ module Boiler
 
       if unraid?
         FileUtils.mkdir_p '/boot/extra'
-        FileUtils.mv "#{packed_name}.tgz", '/boot/extra'
+        FileUtils.mv "#{packed_name}", '/boot/extra'
 
         status "Installing"
-        `installpkg /boot/extra/#{packed_name}.tgz`
+        `installpkg /boot/extra/#{packed_name}`
 
         status 'Installed!', :green
       else

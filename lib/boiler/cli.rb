@@ -66,8 +66,10 @@ module Boiler
     desc 'register NAME URL', 'Register a package'
     def register(name, url)
       unless git_protocol? url
-        status 'Url must use git:// protocol', :red
-        abort
+        unless url = convert_to_git_protocol(url)
+          status 'Url must use git:// protocol', :red
+          abort
+        end
       end
 
       do_register = yes? '[yN]', 'Are you sure you want to register this package? '

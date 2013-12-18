@@ -55,6 +55,13 @@ module Boiler
       true if /^git:\/\// =~ url
     end
 
+    def convert_to_git_protocol(url)
+      git_url = url.gsub(/(git@|https:\/\/)/, 'git://')
+      if git_protocol? git_url
+        git_url
+      end
+    end
+
     def manifest_exists?(dest)
       true if File.exists? manifest(dest)
     end

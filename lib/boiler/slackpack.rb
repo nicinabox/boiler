@@ -23,6 +23,10 @@ module Boiler
       }
     end
 
+    def required
+      %w(name version)
+    end
+
     def run_tasks(tmp, config)
       config[:tasks].each do |task|
         status "Running #{task}"

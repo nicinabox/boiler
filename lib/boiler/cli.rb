@@ -98,7 +98,7 @@ module Boiler
       metadata = JSON.parse File.read manifest(dest)
       required.each do |key, val|
         if !metadata.has_key?(key) and !metadata[key].empty?
-          status "boiler.json requires #{key}"
+          status "boiler.json requires #{key}", :red
           abort
         end
       end

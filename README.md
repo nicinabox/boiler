@@ -72,7 +72,6 @@ See this project's boiler.json for a working example.
 ## Todo
 
 * Tests
-* `boiler info NAME` for installed packages
 * Thor required through bundler not found on unraid
 * Robustness on install (thin dependencies if possible)
 * Better error reporting when something fails

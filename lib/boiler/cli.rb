@@ -163,11 +163,12 @@ module Boiler
 
     end
 
-    desc 'init', 'Create a boiler.json in the current directory'
-    def init
-      config = manifest_wizard defaults(File.basename(Dir.pwd))
+    desc 'init [DIRECTORY]', 'Create a boiler.json in the specified directory'
+    def init(directory = Dir.pwd)
+      path = File.expand_path(directory)
+      config = manifest_wizard defaults(File.basename(path))
 
-      File.open("boiler.json","w") do |f|
+      File.open("#{path}/boiler.json","w") do |f|
         f.write(JSON.pretty_generate(config))
       end
     end

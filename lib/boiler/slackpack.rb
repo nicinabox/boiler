@@ -39,7 +39,7 @@ module Boiler
         `cd #{src} && tar -czf ../#{name}.tgz .`
       end
 
-      `mv /tmp/boiler/#{name}.tgz #{current_dir}`
+      `mv #{tmp_boiler}/#{name}.tgz #{current_dir}`
     end
 
     def prefix_files(dir, config)
@@ -112,7 +112,7 @@ module Boiler
       config = defaults(config[:name]).deep_merge(config)
 
       name = package_name(config)
-      tmp_dir = "/tmp/boiler/#{name}"
+      tmp_dir = "#{tmp_boiler}/#{name}"
 
       copy_files_to_tmp src, tmp_dir, config
 
@@ -123,7 +123,7 @@ module Boiler
       prefix_files tmp_dir, config
       gzip(tmp_dir, name)
 
-      FileUtils.rm_rf Dir.glob("/tmp/boiler/#{config[:name]}*")
+      FileUtils.rm_rf Dir.glob("#{tmp_boiler}/#{config[:name]}*")
       name + '.tgz'
     end
 

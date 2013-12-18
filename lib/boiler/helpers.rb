@@ -22,19 +22,22 @@ module Boiler
       /unraid/i =~ `uname -a`.strip
     end
 
+    def tmp_boiler
+      "/tmp/boiler"
+    end
+
     def tmp_repo(name)
-      "/tmp/boiler/#{name}"
+      "#{tmp_boiler}/#{name}"
     end
 
     def clone_repo(name, url, version=nil)
       dest = tmp_repo(name)
-      path = "/tmp/boiler"
 
       # Remove that directory before we create it
       FileUtils.rm_rf dest
-      FileUtils.mkdir_p path
+      FileUtils.mkdir_p tmp_boiler
 
-      repo = Git.clone(url, name, :path => path)
+      repo = Git.clone(url, name, :path => tmp_boiler)
       tags = repo.lib.tags.sort {|x, y| Gem::Version.new(x) <=> Gem::Version.new(y) }
       repo.checkout (version ||= tags.last)
       [repo, version]

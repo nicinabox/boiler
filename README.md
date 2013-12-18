@@ -77,7 +77,7 @@ See this project's boiler.json for a working example.
 
 ## Contributing
 
-Boiler loves contributers!
+Boiler loves contributors!
 
 1. Fork it
 2. Create your feature branch (git checkout -b my-new-feature)

@@ -1,5 +1,6 @@
 require 'bundler/setup'
 require 'thor'
+require 'crack'
 require 'boiler/slackpack'
 require 'boiler/helpers'
 require 'boiler/version'
@@ -149,6 +150,59 @@ module Boiler
       FileUtils.rm Dir.glob("/boot/extra/#{name}*")
 
       install name
+    end
+
+    desc 'convert PLG', 'Convert a plg to boiler package'
+    def convert(plg)
+      file    = File.read plg
+      name    = File.basename(plg).gsub(/\.plg$/, '')
+      xml     = Crack::XML.parse(file)
+      plugin  =  xml['PLUGIN']
+      tmp_dir = "#{File.dirname(plg)}/#{name}"
+      config  = defaults(name)
+
+      status "Converting #{config[:name]}"
+
+      FileUtils.mkdir_p(tmp_dir)
+
+      plugin['FILE'].each do |f|
+        # Dependencies
+        if f['URL']
+          url = extract_dependency(f) || extract_asset(f)
+          if url.is_a? String
+            config[:dependencies] << url
+          else
+            asset_dest = "#{tmp_dir}#{url[:dest]}"
+            asset      = File.basename asset_dest
+            dirname    = File.dirname asset_dest
+            fetch_url  = url[:url]
+
+            status "Fetching #{asset}"
+            `mkdir -p #{dirname} && wget -q #{fetch_url} -O #{asset_dest}`
+          end
+
+        # Installer
+        elsif f['Run'] == '/bin/bash'
+          config[:post_install] << f['INLINE']
+
+        # Create files
+        else
+          file_name = f['Name']
+          FileUtils.mkdir_p(tmp_dir + File.dirname(file_name))
+
+          File.open("#{tmp_dir}#{file_name}", "w") do |f_dest|
+            f_dest.write f['INLINE']
+          end
+        end
+      end
+
+      config.deep_merge! manifest_wizard(config)
+
+      File.open("#{tmp_dir}/boiler.json", 'w') do |f_boiler|
+        f_boiler.write JSON.pretty_generate(config)
+      end
+
+      status "Please review your package at #{tmp_dir}", :green
     end
 
     desc 'version', 'Prints version'

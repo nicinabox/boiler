@@ -89,5 +89,18 @@ module Boiler
       config
     end
 
+    def extract_dependency(f)
+      if /tx|jz$/ =~ f['URL']
+        f['URL']
+      end
+    end
+
+    def extract_asset(f)
+      {
+        :dest => f['Name'],
+        :url  => f['URL']
+      }
+    end
+
   end
 end

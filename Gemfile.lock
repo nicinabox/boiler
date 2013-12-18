@@ -1,3 +1,9 @@
+GIT
+  remote: git://github.com/erikhuda/thor.git
+  revision: 577fcc457805451eb5e0c15fc382dfb65a8af224
+  specs:
+    thor (0.18.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -30,4 +36,4 @@ DEPENDENCIES
   git
   httparty
   rspec
-  thor
+  thor!

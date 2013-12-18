@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem 'thor'
+gem 'thor', github: 'erikhuda/thor'
 gem 'httparty'
 gem 'git'
 gem 'deep_merge'

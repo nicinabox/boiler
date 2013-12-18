@@ -128,13 +128,31 @@ module Boiler
       end
     end
 
-    desc 'list', 'List installed packages'
-    def list
-      files = Dir.glob("/var/log/boiler/**/boiler.json")
+    desc 'list [NAME]', 'List installed packages'
+    def list(name=nil)
+      files = installed_packages(name)
       files.each do |f|
         config = JSON.parse File.read f
         three_columns config['name'], config['version'], config['description']
       end
+    end
+
+    desc 'info NAME', 'Get info on installed package'
+    def info(name)
+      packages = installed_packages(name)
+      if packages
+        config = JSON.parse File.read packages.first
+
+        keys = %w(name version description license authors)
+        keys.each do |key|
+          value = config[key]
+          value = value.join(', ') if value.is_a? Array
+          two_columns "#{key.capitalize}:", value if value
+        end
+      else
+        status "No package named #{name}"
+      end
+
     end
 
     desc 'init', 'Create a boiler.json in the current directory'

@@ -47,6 +47,11 @@ module Boiler
       [repo, version]
     end
 
+    def installed_packages(name)
+      wildcard = name ? "#{name}*" : "**"
+      Dir.glob("/var/log/boiler/#{wildcard}/boiler.json")
+    end
+
     def public_repo?(url)
       true if `git ls-remote #{url}`.include? 'master'
     end

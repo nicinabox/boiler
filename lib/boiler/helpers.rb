@@ -18,6 +18,10 @@ module Boiler
       say "=> #{message}", color
     end
 
+    def to_simple_param(string)
+      string.downcase.gsub(' ', '-')
+    end
+
     def unraid?
       /unraid/i =~ `uname -a`.strip
     end

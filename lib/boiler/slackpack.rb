@@ -15,8 +15,8 @@ module Boiler
         arch: 'noarch',
         build: 'unraid',
         prefix: {
-          :"usr/docs/#{name}" => ['README.*'],
-          :"var/log/boiler/#{name}" => ['boiler.json']
+          :"usr/docs/#{to_simple_param name}" => ['README.*'],
+          :"var/log/boiler/#{to_simple_param name}" => ['boiler.json']
         },
         ignore: [],
         post_install: []

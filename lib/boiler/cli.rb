@@ -157,7 +157,7 @@ module Boiler
 
     desc 'init', 'Create a boiler.json in the current directory'
     def init
-      config = manifest_wizard
+      config = manifest_wizard defaults(File.basename(Dir.pwd))
 
       File.open("boiler.json","w") do |f|
         f.write(JSON.pretty_generate(config))

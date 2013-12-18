@@ -98,7 +98,7 @@ module Boiler
     end
 
     def manifest_wizard(config = {})
-      config[:name] = ask "name:", default: default(config[:name], File.basename(Dir.pwd))
+      config[:name]        = ask "name:", default: default(config[:name], File.basename(Dir.pwd))
       config[:version]     = ask "version:", default: default(config[:version], '0.1.0')
       config[:authors]     = ask "authors:", default: default(config[:authors], name_and_email)
       config[:description] = ask "description:", default: config[:description]

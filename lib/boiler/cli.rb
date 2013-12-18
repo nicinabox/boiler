@@ -188,10 +188,11 @@ module Boiler
         # Create files
         else
           file_name = f['Name']
-          FileUtils.mkdir_p(tmp_dir + File.dirname(file_name))
-
-          File.open("#{tmp_dir}#{file_name}", "w") do |f_dest|
-            f_dest.write f['INLINE']
+          unless /var\/log\/plugins/ =~ file_name
+            FileUtils.mkdir_p(tmp_dir + File.dirname(file_name))
+            File.open("#{tmp_dir}#{file_name}", "w") do |f_dest|
+              f_dest.write f['INLINE']
+            end
           end
         end
       end

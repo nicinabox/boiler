@@ -113,7 +113,8 @@ module Boiler
         :symbolize_names => true
       })
 
-      config = defaults(config[:name]).deep_merge(config)
+      d = defaults(config[:name])
+      config = d.deep_merge!(config)
 
       name = package_name(config)
       tmp_dir = "#{tmp_boiler}/#{name}"

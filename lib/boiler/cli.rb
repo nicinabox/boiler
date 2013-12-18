@@ -136,14 +136,7 @@ module Boiler
 
     desc 'init', 'Create a boiler.json in the current directory'
     def init
-      config = {}
-
-      config[:name]    = ask "name:", default: File.basename(Dir.pwd)
-      config[:version] = ask "version:", default: '0.1.0'
-      config[:authors] = ask "authors:", default: name_and_email
-      config[:description] = ask "description:"
-      config[:homepage] = ask "homepage:"
-      config[:license] = ask "license:", default: 'MIT'
+      config = manifest_wizard
 
       File.open("boiler.json","w") do |f|
         f.write(JSON.pretty_generate(config))

@@ -71,5 +71,23 @@ module Boiler
     def git_config(key)
       Git.global_config(key)
     end
+
+    def default(*vals)
+      vals.each do |val|
+        return val unless (val.empty? or val.nil?)
+      end
+    end
+
+    def manifest_wizard(config = {})
+      config[:name] = ask "name:", default: default(config[:name], File.basename(Dir.pwd))
+      config[:version]     = ask "version:", default: default(config[:version], '0.1.0')
+      config[:authors]     = ask "authors:", default: default(config[:authors], name_and_email)
+      config[:description] = ask "description:", default: config[:description]
+      config[:homepage]    = ask "homepage:", default: config[:homepage]
+      config[:license]     = ask "license:", default: config[:license]
+
+      config
+    end
+
   end
 end

@@ -6,17 +6,21 @@ module Boiler
 
     def defaults(name)
       {
+        name: name,
+        version: '0.0.0',
+        description: "",
+        authors: [],
+        dependencies: [],
+        license: 'MIT',
         arch: 'noarch',
         build: 'unraid',
         prefix: {
           :"usr/docs/#{name}" => ['README.*'],
           :"var/log/boiler/#{name}" => ['boiler.json']
-        }
+        },
+        ignore: [],
+        post_install: []
       }
-    end
-
-    def required
-      %w(name version)
     end
 
     def run_tasks(tmp, config)

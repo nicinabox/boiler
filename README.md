@@ -45,6 +45,10 @@ See this project's boiler.json for a working example.
 
 **version** [string, required] - The version of your package. Should be semver and match git tags
 
+**arch** [string] - Defaults to `noarch`
+
+**build** [string] - Defaults to `unraid`
+
 **description** [string] - A description of your package
 
 **authors** [array] - An array of authors. Supports Name <email> syntax.

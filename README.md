@@ -10,14 +10,18 @@
 
 ## Usage
 
+    convert PLG             # Convert a plg to boiler package
+    help [COMMAND]          # Describe available commands or one specific command
+    info NAME               # Get info on installed package
     init                    # Create a boiler.json in the current directory
     install NAME [VERSION]  # Install a package by name
-    list                    # List installed packages
+    list [NAME]             # List installed packages
     pack DIR                # Pack a directory for distribution
     register NAME URL       # Register a package
     remove NAME             # Remove (uninstall) a package
     search NAME             # Search for packages
     update NAME             # Update package by name
+    version                 # Prints version
 
 ## Creating a package
 

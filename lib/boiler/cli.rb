@@ -152,6 +152,7 @@ module Boiler
       install name
     end
 
+    # This converter was designed against Influencer's plg code. It's not guaranteed to work with any plg.
     desc 'convert PLG', 'Convert a plg to boiler package'
     def convert(plg)
       file    = File.read plg

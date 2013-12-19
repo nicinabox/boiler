@@ -72,8 +72,10 @@ See this project's boiler.json for a working example.
 * Tests
 * Robustness on install (thin dependencies if possible)
 * Better error reporting when something fails
-* Convert plgs accurately
-* Version string appears 3 times
+* Convert plgs more accurately
+* Version string appears 3 times in repo :/
+* Support array of dependency urls in boiler.json
+* Add info on testing your package
 
 ## Contributing
 

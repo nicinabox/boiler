@@ -41,6 +41,9 @@
     "echo 'source /etc/bundlerc' >> /etc/profile",
     "gem update --system",
     "gem install bundler",
-    "bundle install --gemfile=/usr/local/boiler/Gemfile"
+    "bundle install --gemfile=/usr/local/boiler/Gemfile",
+    "echo ''",
+    "echo 'Please run `source /etc/bundlerc` or reopen your terminal session'",
+    "echo ''"
   ]
 }

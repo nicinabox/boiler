@@ -76,6 +76,7 @@ See this project's boiler.json for a working example.
 * Version string appears 3 times in repo :/
 * Support array of dependency urls in boiler.json
 * Add info on testing your package
+* Setup as gem? Useful for development (convert, pack)
 
 ## Contributing
 

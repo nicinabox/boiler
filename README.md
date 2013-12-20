@@ -74,9 +74,11 @@ See this project's boiler.json for a working example.
 * Better error reporting when something fails
 * Convert plgs more accurately
 * Version string appears 3 times in repo :/
-* Support array of dependency urls in boiler.json
 * Add info on testing your package
 * Setup as gem? Useful for development (convert, pack)
+* boiler.json
+  * dependencies: supports urls and version
+  * peerDependencies: same as dependencies, but for boiler packages
 
 ## Contributing
 
@@ -90,25 +92,7 @@ Boiler loves contributors!
 
 ## License
 
-Copyright (c) 2013 Nic Aitch
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+MIT. Copyright 2013 Nic Aitch
 
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/nicinabox/boiler/trend.png)](https://bitdeli.com/free "Bitdeli Badge")

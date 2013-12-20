@@ -1,4 +1,6 @@
 require 'git'
+require 'net/https'
+require 'uri'
 require 'httparty'
 require 'fileutils'
 require 'deep_merge'
@@ -68,6 +70,32 @@ module Boiler
       end
     end
 
+    def download(url)
+      filename = extract_filename(url)
+
+      uri = URI.parse(url)
+      http = Net::HTTP.new(uri.host, uri.port)
+      if uri.scheme == "https"  # enable SSL/TLS
+        http.use_ssl = true
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      end
+
+      tmp_dir = tmp_boiler
+      f = File.open("#{tmp_dir}/#{filename}", "w")
+      begin
+        http.start do
+          http.request_get(uri.path) do |resp|
+            resp.read_body do |segment|
+              f.write(segment)
+            end
+          end
+        end
+      ensure
+        f.close()
+      end
+      "#{tmp_dir}/#{filename}"
+    end
+
     def manifest_exists?(dest)
       true if File.exists? manifest(dest)
     end
@@ -122,5 +150,9 @@ module Boiler
       }
     end
 
+    def extract_filename(url)
+      uri = URI.parse(url)
+      File.basename(uri.path)
+    end
   end
 end

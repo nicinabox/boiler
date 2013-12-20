@@ -1,6 +1,4 @@
 require 'git'
-require 'net/https'
-require 'uri'
 require 'httparty'
 require 'fileutils'
 require 'deep_merge'
@@ -70,30 +68,14 @@ module Boiler
       end
     end
 
+    # TODO: Move this functionality to trolley
     def download(url)
-      filename = extract_filename(url)
-
-      uri = URI.parse(url)
-      http = Net::HTTP.new(uri.host, uri.port)
-      if uri.scheme == "https"  # enable SSL/TLS
-        http.use_ssl = true
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      filename = File.basename(url)
+      File.open("#{tmp_boiler}/#{filename}", "w") do |f|
+        f << HTTParty.get(url)
       end
 
-      tmp_dir = tmp_boiler
-      f = File.open("#{tmp_dir}/#{filename}", "w")
-      begin
-        http.start do
-          http.request_get(uri.path) do |resp|
-            resp.read_body do |segment|
-              f.write(segment)
-            end
-          end
-        end
-      ensure
-        f.close()
-      end
-      "#{tmp_dir}/#{filename}"
+      "#{tmp_boiler}/#{filename}"
     end
 
     def manifest_exists?(dest)
@@ -148,11 +130,6 @@ module Boiler
         :dest => f['Name'],
         :url  => f['URL']
       }
-    end
-
-    def extract_filename(url)
-      uri = URI.parse(url)
-      File.basename(uri.path)
     end
   end
 end

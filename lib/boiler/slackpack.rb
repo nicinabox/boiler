@@ -88,7 +88,14 @@ module Boiler
     def setup_dependencies(tmp_dir, config)
       if config[:dependencies]
         deps = config[:dependencies].map do |pkg, version|
-          "trolley install #{pkg} #{version}"
+          if /^http/ = version
+            downloaded_file = download(version)
+            `installpkg #{downloaded_file}`
+            `cp #{downloaded_file} /boot/extra`
+            File.delete(downloaded_file)
+          else
+            "trolley install #{pkg} #{version}"
+          end
         end
 
         config[:post_install].unshift deps.join "\n"

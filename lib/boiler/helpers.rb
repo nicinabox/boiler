@@ -68,16 +68,6 @@ module Boiler
       end
     end
 
-    # TODO: Move this functionality to trolley
-    def download(url)
-      filename = File.basename(url)
-      File.open("/boot/extra/#{filename}", "w") do |f|
-        f << HTTParty.get(url)
-      end
-
-      "/boot/extra/#{filename}"
-    end
-
     def manifest_exists?(dest)
       true if File.exists? manifest(dest)
     end

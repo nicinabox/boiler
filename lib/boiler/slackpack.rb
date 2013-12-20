@@ -89,8 +89,10 @@ module Boiler
       if config[:dependencies]
         deps = config[:dependencies].map do |pkg, version|
           if /^http/ =~ version
-            downloaded_file = download(version)
-            `installpkg #{downloaded_file}`
+            url = version
+            name = File.basename(url)
+
+            "wget --no-check-certificate #{url} -P /boot/extra && installpkg /boot/extra/#{name}"
           else
             "trolley install #{pkg} #{version}"
           end

@@ -114,6 +114,8 @@ module Boiler
     end
 
     def create_package(src)
+      src = File.expand_path src
+
       src.gsub!(/\/$/, '') if /\/$/ =~ src
 
       config = JSON.parse(File.read(manifest(src)), {

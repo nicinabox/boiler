@@ -44,7 +44,7 @@ module Boiler
 
       repo = Git.clone(url, name, :path => tmp_boiler)
       tags = repo.lib.tags.sort {|x, y| Gem::Version.new(x) <=> Gem::Version.new(y) }
-      repo.checkout (version ||= tags.last)
+      repo.checkout (version ||= tags.last || 'master')
       [repo, version]
     end
 

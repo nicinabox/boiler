@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version=0.2.1
+version=0.2.2
 name='boiler'
 
 # Make sure we've got an extras directory

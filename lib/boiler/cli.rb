@@ -173,12 +173,12 @@ module Boiler
       end
     end
 
-    desc 'update NAME', 'Update package by name'
-    def update(name)
+    desc 'update NAME [VERSION]', 'Update package by name'
+    def update(name, version=nil)
       status 'Removing old package'
       FileUtils.rm Dir.glob("/boot/extra/#{name}*")
 
-      install name
+      install name, version
     end
 
     # This converter was designed against Influencer's plg code. It's not guaranteed to work with any plg.

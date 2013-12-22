@@ -1,4 +1,6 @@
-wget -qO- --no-check-certificate https://raw.github.com/nicinabox/trolley/master/install.sh | sh -
+if [[ `command -v trolley` == "" ]]; then
+  wget -qO- --no-check-certificate https://raw.github.com/nicinabox/trolley/master/install.sh | sh -
+fi
 
 source /etc/bundlerc
 

@@ -142,7 +142,7 @@ module Boiler
 
     desc 'info NAME', 'Get info on installed package'
     def info(name)
-      packages = installed_packages(name)
+      packages = installed_packages("#{name}*")
       if packages
         config = JSON.parse File.read packages.first
 
@@ -155,7 +155,22 @@ module Boiler
       else
         status "No package named #{name}"
       end
+    end
 
+    desc 'open NAME', "Open a package's homepage"
+    def open(name)
+      package = self.class.get("/packages/#{name}")
+      url = package['url'].gsub(/^git/, 'http')
+
+      packages = installed_packages(name)
+
+      if packages.any?
+        config = JSON.parse File.read packages
+        url = config['homepage'] if config['homepage'].present?
+      end
+
+      status "Opening #{url}"
+      `open #{url}`
     end
 
     desc 'init [DIRECTORY]', 'Create a boiler.json in the specified directory'

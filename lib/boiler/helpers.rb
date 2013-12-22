@@ -6,14 +6,6 @@ require 'deep_merge'
 module Boiler
   module Helpers
 
-    def two_columns(*args)
-      puts "%-15s %s" % args
-    end
-
-    def three_columns(*args)
-      puts "%-15s %-15s %s" % args
-    end
-
     def status(message, color = nil)
       say "=> #{message}", color
     end

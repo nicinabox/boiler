@@ -130,19 +130,14 @@ module Boiler
     desc 'search NAME', 'Search for packages'
     def search(fragment=nil)
       packages = self.class.get("/packages/search/#{fragment}")
-
-      packages.each do |package|
-        two_columns package['name'], package['url']
-      end
+      print_table packages.map { |p| [p['name'], p['url']] }
     end
 
     desc 'list [NAME]', 'List installed packages'
     def list(name=nil)
       files = installed_packages(name)
-      files.each do |f|
-        config = JSON.parse File.read f
-        three_columns config['name'], config['version'], config['description']
-      end
+      configs = files.map { |f| JSON.parse File.read(f) }
+      print_table configs.map { |c| [c['name'], c['version'], c['description']] }
     end
 
     desc 'info NAME', 'Get info on installed package'

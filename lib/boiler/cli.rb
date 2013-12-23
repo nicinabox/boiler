@@ -181,6 +181,14 @@ module Boiler
       File.open("#{path}/boiler.json","w") do |f|
         f.write(JSON.pretty_generate(config))
       end
+
+      File.open("#{path}/README.md","w") do |f|
+        f.write <<-MD
+# #{config[:name]}
+
+#{config[:description]}
+        MD
+      end
     end
 
     desc 'update NAME [VERSION]', 'Update package by name'

@@ -56,7 +56,7 @@ module Boiler
         FileUtils.mv "#{packed_name}", '/boot/extra'
 
         status "Installing"
-        `installpkg /boot/extra/#{packed_name}`
+        puts `installpkg /boot/extra/#{packed_name}`
 
         status 'Installed!', :green
       else

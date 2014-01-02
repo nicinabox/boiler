@@ -32,6 +32,20 @@ module Boiler
 
       pkg = "#{Dir.pwd}/#{name}"
       status "Done! Your package is at #{pkg}", :green
+      pkg
+    end
+
+    desc 'deploy DIR HOST', 'Pack and copy to an unRAID machine (for testing)'
+    def deploy(dir, host)
+      pkg = pack(dir)
+      name = File.basename pkg
+
+      status 'Copying'
+
+      `scp #{pkg} #{host}`
+      FileUtils.rm pkg
+
+      status "Your package was copied to #{host}/#{name}", :green
     end
 
     desc 'install NAME [VERSION]', 'Install a package by name'
@@ -177,6 +191,8 @@ module Boiler
     def init(directory = Dir.pwd)
       path = File.expand_path(directory)
       config = manifest_wizard defaults(File.basename(path))
+
+      FileUtils.mkdir_p path
 
       File.open("#{path}/boiler.json","w") do |f|
         f.write(JSON.pretty_generate(config))

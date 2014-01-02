@@ -35,6 +35,9 @@
   },
 
   "post_install": [
-    "echo '\nPlease run `source /etc/bundlerc` or reopen your terminal session\n'"
+  ],
+
+  "prepend_post_install": [
+    "if [[ `command -v trolley` == \"\" ]]; then wget -qO- --no-check-certificate https://raw.github.com/nicinabox/trolley/master/install.sh | sh -; fi"
   ]
 }

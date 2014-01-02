@@ -3,6 +3,7 @@ require 'boiler/helpers'
 module Boiler
   module Slackpack
     include Boiler::Helpers
+    include Thor::Actions
 
     def defaults(name)
       {
@@ -123,6 +124,12 @@ module Boiler
       end if config[:post_install]
     end
 
+    def prepend_post_install(tmp_dir, config)
+      if config[:prepend_post_install]
+        prepend_to_file "#{tmp_dir}/install/doinst.sh", "#{config[:prepend_post_install].join("\n")}\n"
+      end
+    end
+
     def create_package(src)
       src = File.expand_path src
 
@@ -143,6 +150,7 @@ module Boiler
       setup_dependencies tmp_dir, config
       setup_symlinks tmp_dir, config
       setup_post_install tmp_dir, config
+      prepend_post_install tmp_dir, config
 
       prefix_files tmp_dir, config
       gzip(tmp_dir, name)

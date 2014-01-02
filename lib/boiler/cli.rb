@@ -24,7 +24,7 @@ module Boiler
 
     desc 'pack DIR', 'Pack a directory for distribution'
     def pack(dir)
-      name = File.basename dir
+      name = File.basename File.expand_path dir
 
       status "Packing #{name}"
 

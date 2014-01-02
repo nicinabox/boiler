@@ -1,17 +1,8 @@
 require 'bundler'
 require 'crack'
-require 'boiler/slackpack'
 require 'boiler/helpers'
+require 'boiler/slackpack'
 require 'boiler/version'
-
-if Boiler::Helpers.unraid?
-  pwd = Dir.pwd
-  Dir.chdir File.expand_path('../..', __FILE__)
-  Bundler.setup(:default)
-  Dir.chdir pwd
-end
-
-require 'thor'
 
 module Boiler
   class CLI < Thor

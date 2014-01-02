@@ -109,14 +109,12 @@ module Boiler
           end
         end
 
-        config[:post_install].unshift deps.join "\n"
+        prepend_to_file "#{tmp_dir}/install/doinst.sh", "#{deps.join("\n")}\n"
       end
     end
 
     def setup_post_install(tmp_dir, config)
       config[:post_install].each do |cmd|
-        FileUtils.mkdir_p "#{tmp_dir}/install"
-
         File.open("#{tmp_dir}/install/doinst.sh", "a") do |f|
           f << "#{cmd}\n"
         end

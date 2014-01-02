@@ -1,5 +1,9 @@
 # boiler
 
+Boiler is a tool to create, distribute, install, and update unRAID packages (plugins) easily. It extends Slackware's native package system to provide conveniences to devs (like config persistence) as well as users (like no need to reboot when installing or removing a package and easy updating).
+
+[Visit the registry](http://registry.getboiler.com/) to see all available packages.
+
 ![](http://i.minus.com/iPuI9DhwCn2cA.gif)
 
 ## Install
@@ -74,7 +78,7 @@ See this project's boiler.json for a working example.
 * Better error reporting when something fails
 * Convert plgs more accurately
 * Version string appears 3 times in repo :/
-* Add info on testing your package
+* Add info on testing your package with a vm
 * Setup as gem? Useful for development (convert, pack)
 * boiler.json
   * dependencies: supports urls and version

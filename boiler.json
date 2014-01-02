@@ -31,8 +31,7 @@
   },
 
   "symlink": {
-    "/etc/gemrc": "/root/.gemrc",
-    "/usr/local/boiler/bin/boiler": "/usr/local/bin/boiler"
+    "/etc/gemrc": "/root/.gemrc"
   },
 
   "post_install": [

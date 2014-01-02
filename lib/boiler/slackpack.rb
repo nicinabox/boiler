@@ -15,12 +15,13 @@ module Boiler
         arch: 'noarch',
         build: 'unraid',
         prefix: {
-          :"usr/local/#{to_simple_param name}" => ['bin', 'lib', 'Gemfile*'],
+          :"usr/local/boiler/#{to_simple_param name}" => ['bin', 'lib', 'Gemfile*'],
           :"boot/plugins/custom/#{to_simple_param name}" => ['config'],
           :"usr/docs/#{to_simple_param name}" => ['README.*'],
           :"var/log/boiler/#{to_simple_param name}" => ['boiler.json']
         },
         ignore: [],
+        symlink: {},
         post_install: []
       }
     end
@@ -82,9 +83,19 @@ module Boiler
     end
 
     def setup_symlinks(tmp_dir, config)
+      bins = Dir.glob "bin/*"
+      if bins.any?
+        bin_map = bins.map { |path|
+          name = File.basename path
+          { :"/usr/local/boiler/#{to_simple_param name}/#{path}" => "/usr/local/bin/#{name}" }
+        }
+
+        config[:symlink].merge! bin_map.first
+      end
+
       config[:symlink].each do |src, dest|
         config[:post_install] << "ln -sf #{src} #{dest}"
-      end if config[:symlink]
+      end
     end
 
     def setup_dependencies(tmp_dir, config)

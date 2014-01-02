@@ -51,7 +51,7 @@ There are some special files boiler looks for when creating the final package.
 
 If your project has config files, place them here.
 
-**bin/\***, **lib/\***, **Gemfile\*** - (prefix: `/usr/local/NAME/`)
+**bin/\***, **lib/\***, **Gemfile\*** - (prefix: `/usr/local/boiler/NAME/`)
 
 **install/doinst.sh**
 

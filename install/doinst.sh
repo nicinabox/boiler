@@ -16,4 +16,4 @@ if [[ `command -v bundle` == "" ]]; then
   gem install bundler
 fi
 
-bundle install --gemfile=/usr/local/boiler/Gemfile
+bundle install --gemfile=/usr/local/boiler/boiler/Gemfile

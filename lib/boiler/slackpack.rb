@@ -143,6 +143,9 @@ module Boiler
       name = package_name(config)
       tmp_dir = "#{tmp_boiler}/#{name}"
 
+      FileUtils.mkdir_p "#{tmp_dir}/install"
+      FileUtils.touch   "#{tmp_dir}/install/doinst.sh"
+
       copy_files_to_tmp src, tmp_dir, config
 
       setup_dependencies tmp_dir, config

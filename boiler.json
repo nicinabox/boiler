@@ -28,7 +28,6 @@
 
   "ignore": ["install.sh"],
   "prefix": {
-    "usr/local/boiler": ["bin", "lib", "Gemfile*"]
   },
 
   "symlink": {

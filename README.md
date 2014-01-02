@@ -43,33 +43,57 @@ Boiler packages use git as the distribution mechanism. Your package must be a pu
 
 Once a package is registered, it does not need to be updated through boiler. Boiler makes use of git tags (use semver!) to deliver a package version. Commit and tag as normal to release your package.
 
+## Package anatomy
+
+There are some special files boiler looks for when creating the final package.
+
+**config/\*.json** - (prefix: `/boot/plugins/custom/NAME/`)
+
+If your project has config files, place them here.
+
+**bin/\***, **lib/\***, **Gemfile\*** - (prefix: `/usr/local/NAME/`)
+
+**install/doinst.sh**
+
+The `post_install` option in `boiler.json` appends lines here. It's okay to create this file to have more complex code and allow `post_install` to append simpler parts.
+
+**boiler.json** - (prefix: `/var/log/boiler/NAME/`)
+
+The meat-and-potatoes of a boiler package. It is required to register a package.
+
+**README.\*** - (prefix: `/usr/docs/NAME/`)
+
+You should include a readme in your project detailing what your project is, how it install it, where to find configurations, etc.
+
 ## boiler.json
 
 See this project's boiler.json for a working example.
 
-**name** [string, required] - The name of your package
+**name** *string* (required) - The name of your package
 
-**version** [string, required] - The version of your package. Should be semver and match git tags
+**version** *string* (required) - The version of your package. Should be semver and match git tags
 
-**arch** [string] - Defaults to `noarch`
+**description** *string* - A description of your package. This helps people discover your package.
 
-**build** [string] - Defaults to `unraid`
+**arch** *string* - Defaults to `noarch`
 
-**description** [string] - A description of your package
+**build** *string* - Defaults to `unraid`
 
-**authors** [array] - An array of authors. Supports Name <email> syntax.
+**authors** *array* - An array of authors/contributors.
 
-**license** [string] - Project license
+**license** *string* - Specify a license for your package so people know how they're permitted to use it and any restrictions you're placing on it
 
-**dependencies** [string] - A hash of dependencies (`"openssl": ">=1.0.1c"`). May use version constraints
+**homepage** *string* - Url to the project's homepage
 
-**ignore** [array] - Ignore files or directories when building the package
+**dependencies** *string* - A hash of Slackware dependencies (`"openssl": ">=1.0.1c"`). May use version constraints
 
-**prefix** [array] - Prefix files or directories with a path during packaging. Useful for mapping directories (say `bin` to, `/usr/local/bin`)
+**ignore** *array* - Ignore files or directories when building the package
 
-**symlink** [hash] - Define files to be symlinked on install
+**prefix** *array* - Prefix files or directories with a path during packaging. Useful for mapping directories (say `bin` to, `/usr/local/bin`)
 
-**post_install** [array] - Define commands to run during post install
+**symlink** *hash* - Define files to be symlinked on install
+
+**post_install** *array* - Define commands to run during post install
 
 ## Todo
 

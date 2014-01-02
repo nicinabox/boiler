@@ -10,11 +10,13 @@ module Boiler
         version: '0.0.0',
         description: "",
         authors: [],
-        dependencies: [],
+        dependencies: {},
         license: 'MIT',
         arch: 'noarch',
         build: 'unraid',
         prefix: {
+          :"usr/local/#{to_simple_param name}" => ['bin', 'lib', 'Gemfile*'],
+          :"boot/plugins/custom/#{to_simple_param name}" => ['config'],
           :"usr/docs/#{to_simple_param name}" => ['README.*'],
           :"var/log/boiler/#{to_simple_param name}" => ['boiler.json']
         },

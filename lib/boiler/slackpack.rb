@@ -18,7 +18,7 @@ module Boiler
         prefix: {
           :"usr/local/boiler/#{to_simple_param name}" => ['bin', 'lib', 'Gemfile*'],
           :"#{configs(name)}" => ['config/*'],
-          :"usr/docs/#{to_simple_param name}" => ['README.*'],
+          :"usr/docs/#{to_simple_param name}" => ['README.*', 'LICENSE*'],
           :"var/log/boiler/#{to_simple_param name}" => ['boiler.json']
         },
         ignore: [],

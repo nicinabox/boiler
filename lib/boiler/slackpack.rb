@@ -98,9 +98,9 @@ module Boiler
         config[:symlink].merge! bin_map.first
       end
 
-      config[:symlink].each do |src, dest|
-        config[:post_install] << "ln -sf #{src} #{dest}"
-      end
+      config[:post_install].unshift config[:symlink].map { |src, dest|
+        "ln -sf #{src} #{dest}"
+      }.join("\n")
     end
 
     def setup_dependencies(tmp_dir, config)

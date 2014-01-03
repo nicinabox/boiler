@@ -12,6 +12,3 @@ if [[ `command -v bundle` == "" ]]; then
   gem install bundler
 fi
 
-bundle install --gemfile=/usr/local/boiler/boiler/Gemfile
-
-echo '=> Please run `source /etc/bundlerc` or reopen your terminal session'

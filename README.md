@@ -61,7 +61,7 @@ The `post_install` option in `boiler.json` appends lines here. It's okay to crea
 
 The meat-and-potatoes of a boiler package. It is required to register a package.
 
-**README.\*** - (prefix: `/usr/docs/NAME/`)
+**README.\***, **LICENSE\*** - (prefix: `/usr/docs/NAME/`)
 
 You should include a readme in your project detailing what your project is, how it install it, where to find configurations, etc.
 
@@ -120,7 +120,7 @@ Boiler loves contributors!
 
 ## License
 
-MIT. Copyright 2013 Nic Aitch
+MIT. Copyright 2014 Nic Aitch
 
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/nicinabox/boiler/trend.png)](https://bitdeli.com/free "Bitdeli Badge")

@@ -17,7 +17,7 @@ module Boiler
         build: 'unraid',
         prefix: {
           :"usr/local/boiler/#{to_simple_param name}" => ['bin', 'lib', 'Gemfile*'],
-          :"boot/plugins/custom/#{to_simple_param name}" => ['config'],
+          :"#{configs(name)}" => ['config/*'],
           :"usr/docs/#{to_simple_param name}" => ['README.*'],
           :"var/log/boiler/#{to_simple_param name}" => ['boiler.json']
         },
@@ -29,6 +29,10 @@ module Boiler
 
     def required
       %w(name version)
+    end
+
+    def configs(name)
+      "/boot/plugins/custom/#{to_simple_param name}/_config"
     end
 
     def run_tasks(tmp, config)
@@ -113,6 +117,24 @@ module Boiler
       end
     end
 
+    def setup_configs(tmp_dir, config)
+      cmds = []
+      src_config_dir    = configs(config[:name])
+      target_config_dir = src_config_dir.gsub('_config', 'config')
+
+      cmds << <<-CMD.gsub(/^ {8}/, '')
+        if [ ! -f #{target_config_dir} ]; then
+          cp -r #{src_config_dir} #{target_config_dir}
+        fi
+      CMD
+
+      cmds << <<-CMD.gsub(/^ {8}/, '')
+        rm -rf #{src_config_dir}
+      CMD
+
+      config[:post_install].unshift cmds.join("\n")
+    end
+
     def setup_post_install(tmp_dir, config)
       config[:post_install].each do |cmd|
         File.open("#{tmp_dir}/install/doinst.sh", "a") do |f|
@@ -150,7 +172,9 @@ module Boiler
 
       setup_dependencies tmp_dir, config
       setup_symlinks tmp_dir, config
+      setup_configs tmp_dir, config
       setup_post_install tmp_dir, config
+
       prepend_post_install tmp_dir, config
 
       prefix_files tmp_dir, config

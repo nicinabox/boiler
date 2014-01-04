@@ -113,6 +113,22 @@ module Boiler
         :url  => f['URL']
       }
     end
+
+    def check_for_update
+      if Boiler::VERSION < remote_version
+        status "A newer version is available.", :green
+        response = ask "Would you like to update now?", default: 'y'
+        if response != 'n'
+          status "Updating"
+          update('boiler')
+        end
+      end
+    end
+
+    def remote_version
+      # TODO: Wire this to github
+      '0.2.3'
+    end
   end
 end
 

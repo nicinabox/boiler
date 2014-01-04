@@ -13,6 +13,11 @@ module Boiler
     base_uri 'http://boiler-registry.herokuapp.com'
     format :json
 
+    def initialize(*args)
+      super
+      check_for_update
+    end
+
     desc 'pack DIR', 'Pack a directory for distribution'
     def pack(dir)
       name = File.basename File.expand_path dir

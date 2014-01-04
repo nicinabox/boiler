@@ -13,16 +13,18 @@ Boiler is a tool to create, distribute, install, and update unRAID packages (plu
 ## Usage
 
     convert PLG             # Convert a plg to boiler package
+    deploy DIR HOST         # Pack and copy to an unRAID machine (for testing)
     help [COMMAND]          # Describe available commands or one specific command
     info NAME               # Get info on installed package
-    init                    # Create a boiler.json in the current directory
+    init [DIRECTORY]        # Create a boiler.json in the specified directory
     install NAME [VERSION]  # Install a package by name
     list [NAME]             # List installed packages
+    open NAME               # Open a package's homepage
     pack DIR                # Pack a directory for distribution
     register NAME URL       # Register a package
     remove NAME             # Remove (uninstall) a package
     search NAME             # Search for packages
-    update NAME             # Update package by name
+    update NAME [VERSION]   # Update package by name
     version                 # Prints version
 
 ## Creating a package
@@ -107,7 +109,6 @@ See this project's boiler.json for a working example.
 * boiler.json
   * dependencies: supports urls and version
   * peerDependencies: same as dependencies, but for boiler packages
-* Prompt for update
 
 ## Contributing
 

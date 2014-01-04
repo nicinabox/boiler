@@ -6,7 +6,7 @@ Boiler is a tool to create, distribute, install, and update unRAID packages (plu
 
 ![](http://i.minus.com/iPuI9DhwCn2cA.gif)
 
-## Install
+## Install for unRAID
 
     wget -qO- --no-check-certificate https://raw.github.com/nicinabox/boiler/master/install.sh | sh -
 
@@ -107,6 +107,7 @@ See this project's boiler.json for a working example.
 * boiler.json
   * dependencies: supports urls and version
   * peerDependencies: same as dependencies, but for boiler packages
+* Prompt for update
 
 ## Contributing
 

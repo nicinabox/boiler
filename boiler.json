@@ -23,6 +23,8 @@
     "libyaml": "0.1.4",
     "zlib": "1.2.6",
     "git": ">=1.7",
+    "ca-certificates": "",
+    "perl": "",
     "ruby": ">=1.9.3"
   },
 
@@ -35,6 +37,7 @@
   },
 
   "post_install": [
+    "c_rehash",
     "bundle install --gemfile=/usr/local/boiler/boiler/Gemfile",
     "echo '=> Please run `source /etc/bundlerc` or reopen your terminal session'"
   ],

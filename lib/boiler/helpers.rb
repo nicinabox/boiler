@@ -126,8 +126,9 @@ module Boiler
     end
 
     def remote_version
-      # TODO: Wire this to github
-      '0.2.3'
+      response = HTTParty.get('https://api.github.com/repos/nicinabox/boiler/tags',
+                              :headers => { 'User-Agent' => 'boiler' })
+      response.first['name']
     end
   end
 end

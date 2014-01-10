@@ -2,6 +2,24 @@
   margin-top: -30px;
 }
 
+.jumbotron {
+  .text-muted {
+    color: white;
+    @include opacity(0.5);
+  }
+  h1 small {
+    font-size: 40%;
+  }
+}
+
+.navbar-brand {
+  .text-muted {
+    color: $brand-primary-darker;
+    font-weight: normal;
+    font-size: 70%;
+  }
+}
+
 #footer {
   min-height: 100px;
 }

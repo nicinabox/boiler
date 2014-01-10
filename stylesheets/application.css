@@ -8410,30 +8410,48 @@ td.visible-print {
   margin-top: -30px;
 }
 
-/* line 5, ../sass/_layout.scss */
+/* line 6, ../sass/_layout.scss */
+.jumbotron .text-muted {
+  color: white;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}
+/* line 10, ../sass/_layout.scss */
+.jumbotron h1 small {
+  font-size: 40%;
+}
+
+/* line 16, ../sass/_layout.scss */
+.navbar-brand .text-muted {
+  color: #c0392b;
+  font-weight: normal;
+  font-size: 70%;
+}
+
+/* line 23, ../sass/_layout.scss */
 #footer {
   min-height: 100px;
 }
 
-/* line 9, ../sass/_layout.scss */
+/* line 27, ../sass/_layout.scss */
 .navbar-default {
   background: #e74c3c;
   border-bottom-color: #c0392b;
 }
-/* line 12, ../sass/_layout.scss */
+/* line 30, ../sass/_layout.scss */
 .navbar-default .navbar-brand {
   color: #c0392b;
   font-weight: bold;
 }
-/* line 15, ../sass/_layout.scss */
+/* line 33, ../sass/_layout.scss */
 .navbar-default .navbar-brand:hover {
   color: white;
 }
-/* line 19, ../sass/_layout.scss */
+/* line 37, ../sass/_layout.scss */
 .navbar-default .navbar-nav > li > a {
   color: white;
 }
-/* line 21, ../sass/_layout.scss */
+/* line 39, ../sass/_layout.scss */
 .navbar-default .navbar-nav > li > a:hover {
   color: white;
   background: #c0392b;

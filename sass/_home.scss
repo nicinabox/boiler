@@ -1,0 +1,17 @@
+#install {
+  margin-top: -30px;
+  background: lighten($brand-primary, 30%);
+  padding: 10px 0;
+  strong {
+    color: $brand-primary;
+  }
+  pre {
+    padding-left: 0;
+    padding-right: 0;
+    margin-bottom: 0;
+    font-size: 15px;
+    background: none;
+    border: none;
+    @include border-radius(0);
+  }
+}

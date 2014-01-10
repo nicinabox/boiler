@@ -1,3 +1,9 @@
 name: Boiler
 markdown: redcarpet
 pygments: true
+
+package_name: boiler
+package_version: 0.3.0
+
+curl_installer: curl -s http://getboiler.com/install | sh
+wget_installer: wget -qO- http://getboiler.com/install | sh -

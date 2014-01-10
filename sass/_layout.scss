@@ -5,3 +5,22 @@
 #footer {
   min-height: 100px;
 }
+
+.navbar-default {
+  background: $brand-primary;
+  border-bottom-color: $brand-primary-darker;
+  .navbar-brand {
+    color: $brand-primary-darker;
+    font-weight: bold;
+    &:hover {
+      color: white;
+    }
+  }
+  .navbar-nav > li > a {
+    color: white;
+    &:hover {
+      color: white;
+      background: $brand-primary-darker;
+    }
+  }
+}

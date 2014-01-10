@@ -8415,6 +8415,30 @@ td.visible-print {
   min-height: 100px;
 }
 
+/* line 9, ../sass/_layout.scss */
+.navbar-default {
+  background: #e74c3c;
+  border-bottom-color: #c0392b;
+}
+/* line 12, ../sass/_layout.scss */
+.navbar-default .navbar-brand {
+  color: #c0392b;
+  font-weight: bold;
+}
+/* line 15, ../sass/_layout.scss */
+.navbar-default .navbar-brand:hover {
+  color: white;
+}
+/* line 19, ../sass/_layout.scss */
+.navbar-default .navbar-nav > li > a {
+  color: white;
+}
+/* line 21, ../sass/_layout.scss */
+.navbar-default .navbar-nav > li > a:hover {
+  color: white;
+  background: #c0392b;
+}
+
 /* line 1, ../sass/_home.scss */
 #install {
   margin-top: -30px;

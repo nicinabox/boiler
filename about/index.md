@@ -4,7 +4,7 @@ title: About
 ---
 
 <p class="lead">
-  Boiler makes package management really, really easy. Search, install, update, and remove without breaking a sweat. Gone are the days of scouring forum posts for working plugins.
+  Boiler makes package management really, really easy. Gone are the days of scouring forum posts for working plugins.
 </p>
 
 ## Why does boiler exist?

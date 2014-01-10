@@ -15,3 +15,12 @@
     @include border-radius(0);
   }
 }
+
+#menu {
+  margin-left: -10px;
+  a {
+    display: block;
+    float: left;
+    padding: 10px;
+  }
+}

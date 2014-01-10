@@ -7,3 +7,5 @@ package_version: 0.3.0
 
 curl_installer: curl -s http://getboiler.com/install | sh
 wget_installer: wget -qO- http://getboiler.com/install | sh -
+
+gauges_id: 52d048d88bfdf733e3001f47

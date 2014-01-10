@@ -14,9 +14,54 @@
 <body>
 
   <div id="root">
-    <div id="header"></div>
+    <div id="header">
+      <nav class="navbar navbar-default navbar-static-top">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#primary-menu">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Boiler</a>
+        </div>
+
+         <div class="collapse navbar-collapse" id="primary-menu">
+            <ul class="nav navbar-nav">
+              <li>
+                <a href="/about">About</a>
+              </li>
+              <li>
+                <a href="/docs">Docs</a>
+              </li>
+              <li>
+                <a href="/guides">Guides</a>
+              </li>
+              <li>
+                <a href="https://github.com/nicinabox/boiler">
+                  View on Github&nbsp;&rarr;
+                </a>
+              </li>
+            </ul>
+          </div>
+      </nav>
+
+
+    </div>
     <div id="main">
-      {{content}}
+      <div class="jumbotron page-heading">
+        <div class="container">
+          {{page.title}}
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-8">
+            {{content}}
+          </div>
+        </div>
+      </div>
     </div>
     <div id="footer"></div>
   </div>

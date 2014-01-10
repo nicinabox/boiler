@@ -8405,6 +8405,16 @@ td.visible-print {
 }
 
 /* Literal.Number.Integer.Long */
+/* line 1, ../sass/_layout.scss */
+.page-heading {
+  margin-top: -30px;
+}
+
+/* line 5, ../sass/_layout.scss */
+#footer {
+  min-height: 100px;
+}
+
 /* line 1, ../sass/_home.scss */
 #install {
   margin-top: -30px;

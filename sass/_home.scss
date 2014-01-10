@@ -1,7 +1,8 @@
 #install {
   margin-top: -30px;
   background: lighten($brand-primary, 30%);
-  padding: 10px 0;
+  padding: 25px 0 10px;
+  background: #eee;
   strong {
     color: $brand-primary;
   }
@@ -9,7 +10,7 @@
     padding-left: 0;
     padding-right: 0;
     margin-bottom: 0;
-    font-size: 15px;
+    font-size: 20px;
     background: none;
     border: none;
     @include border-radius(0);

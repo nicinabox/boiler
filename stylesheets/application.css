@@ -8409,18 +8409,19 @@ td.visible-print {
 #install {
   margin-top: -30px;
   background: #f8c9c4;
-  padding: 10px 0;
+  padding: 25px 0 10px;
+  background: #eee;
 }
-/* line 5, ../sass/_home.scss */
+/* line 6, ../sass/_home.scss */
 #install strong {
   color: #e74c3c;
 }
-/* line 8, ../sass/_home.scss */
+/* line 9, ../sass/_home.scss */
 #install pre {
   padding-left: 0;
   padding-right: 0;
   margin-bottom: 0;
-  font-size: 15px;
+  font-size: 20px;
   background: none;
   border: none;
   -webkit-border-radius: 0;
@@ -8430,12 +8431,12 @@ td.visible-print {
   border-radius: 0;
 }
 
-/* line 19, ../sass/_home.scss */
+/* line 20, ../sass/_home.scss */
 #menu {
   margin-left: -10px;
   margin-top: 20px;
 }
-/* line 22, ../sass/_home.scss */
+/* line 23, ../sass/_home.scss */
 #menu a {
   display: block;
   float: left;

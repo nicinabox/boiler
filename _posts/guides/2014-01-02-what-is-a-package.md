@@ -17,4 +17,27 @@ A package can be anything you want to distribute. It could be a web app, a comma
 
 ## Structure of a package
 
+There are some special files boiler looks for when creating a tarball.
+
+**config/NAME.json** - (prefix: `/boot/plugins/custom/NAME/`)
+
+If your project has config files, place them here.
+
+**bin/**, **lib/**, **Gemfile** - (prefix: `/usr/local/boiler/NAME/`)
+
+**install/doinst.sh**
+
+The `post_install` option in `boiler.json` appends lines here. It's okay to create this file to have more complex code and allow `post_install` to append simpler parts.
+
+**boiler.json** - (prefix: `/var/log/boiler/NAME/`)
+
+The meat-and-potatoes of a boiler package. It is required to register a package.
+
+**README.\***, **LICENSE\*** - (prefix: `/usr/docs/NAME/`)
+
+You should include a readme in your project detailing what your project is, how it install it, where to find configurations, etc.
+
+
 ## The boiler.json
+
+See the [Specification Reference](/guides/specification-reference) for details.

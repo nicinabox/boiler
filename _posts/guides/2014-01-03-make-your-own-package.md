@@ -26,7 +26,7 @@ Clone the Boiler repo (we’ll clone to the ~/code directory here):
     mkdir -p ~/code && cd $_
     git clone https://github.com/nicinabox/boiler.git
 
-Install the Boiler dependencies
+Next, install the Boiler dependencies. This project uses RVM, so you may need to install the appropriate Ruby. Just follow the prompts.
 
     cd boiler
     bundle
@@ -50,6 +50,17 @@ This will create a directory called `boiler-hola` with the following contents:
     boiler.json
     README.md
 
+Move into the `boiler-hola` directory to check it out:
+
+    cd boiler-hola
+    ls
+
+Let's create a git repo with what we've done so far.
+
+    git init
+    git add .
+    git commit -m "Initial commit"
+
 This is technically all you need to register your package, but let's add some more functionality first.
 
 Create a simple configuration file at `config/hola.json`:
@@ -67,7 +78,7 @@ Create a file at `bin/hola`:
 import json
 
 # open the config file
-file = open(ENV['boiler_config_path'] + '/boiler-hola/hola.json')
+file = open('config/hola.json')
 
 # parse it
 config = json.load(file)
@@ -79,6 +90,18 @@ print "Hello {0}, you're doing great!".format(config['name'])
 
 We're just going to open the config file and use it to print a message to the screen. Nothing crazy.
 
+Let's make this file executable so we can try it out:
+
+    chmod a+x bin/hola
+
+Then run it:
+
+    bin/hola
+
+You should see something like:
+
+    Hello Nic, you're doing great!
+
 So, now you should have a pretty basic directory structure:
 
     hola
@@ -89,6 +112,11 @@ So, now you should have a pretty basic directory structure:
       boiler.json
       README.md
 
+Now's a good time to commit the new stuff we added.
+
+    git add .
+    git commit -m "Add bin and config"
+
 ## Testing
 
 You should always test your package on a real unRAID instance before releasing. Boiler has a couple commands that make testing a little easier.
@@ -97,7 +125,9 @@ You should always test your package on a real unRAID instance before releasing. 
 
 Uses the configuration specified in boiler.json to create a tarball in the current directory. Naming will be `NAME-VERSION-ARCH-BUILD.tgz`. For our tutorial project, that’s `hola-0.1.0-noarch-unraid.tgz`
 
-  boiler pack . # That dot isn’t a typo. That’s “this directory”
+    boiler pack .
+
+At this point, you'll need to transfer it to a VM, or machine to install. For a more automated solution, see "deploy".
 
 ### deploy
 
@@ -118,6 +148,8 @@ Use git to create a tag that matches the version number in your `boiler.json`. Y
 Don’t forget to push your tags:
 
     git push --tags
+
+You've now released 0.1.0 of hola. Congrats! Check out [Registering your package](/guides/registering-your-package) for info on adding it to the official registry.
 
 ## Maintaining
 

@@ -39,37 +39,39 @@ You should be all set to use the boiler commands. Test it out:
 
 Back in your `~/code` directory, initialize a new package:
 
-  boiler init boiler-hola
+    boiler init boiler-hola
 
 This will create a directory called `boiler-hola` with the following contents:
 
-  boiler.json
-  README.md
+    boiler.json
+    README.md
 
 This is technically all you need to register your package, but let's add some more functionality first.
 
 Create a simple configuration file at `config/hola.json`:
 
-  {
-    "name": "WRITE YOUR NAME HERE"
-  }
+    {
+      "name": "WRITE YOUR NAME HERE"
+    }
 
 You can have more than one config file, but it’s conventional to  use a json file named after your project.
 
 Create a file at `bin/hola`:
 
-    #!/usr/bin/env python
-    import json
+```python
+#!/usr/bin/env python
+import json
 
-    # open the config file
-    file = open(ENV['boiler_config_path'] + '/boiler-hola/hola.json')
+# open the config file
+file = open(ENV['boiler_config_path'] + '/boiler-hola/hola.json')
 
-    # parse it
-    config = json.load(file)
-    file.close()
+# parse it
+config = json.load(file)
+file.close()
 
-    # say something nice
-    print "Hello {0}, you're doing great!".format(config['name'])
+# say something nice
+print "Hello {0}, you're doing great!".format(config['name'])
+```
 
 We're just going to open the config file and use it to print a message to the screen. Nothing crazy.
 

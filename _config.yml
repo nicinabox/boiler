@@ -1,17 +1,18 @@
+# Jekyll
 name: Boiler
 markdown: redcarpet
 pygments: true
-
 permalink: /:categories/:title
+exclude: [sass]
 
+# App
 package_name: boiler
 package_version: 0.3.0
 
 curl_installer: curl -s http://getboiler.com/install | sh
 wget_installer: wget -qO- http://getboiler.com/install | sh -
 
-gauges_id: 52d048d88bfdf733e3001f47
-
+# Menu
 menu:
 - text: About
   url: /about
@@ -21,3 +22,7 @@ menu:
   url: http://registry.getboiler.com
 - text: View on Github&nbsp;&rarr;
   url: https://github.com/nicinabox/boiler
+
+# Analyics
+gauges_id: 52d048d88bfdf733e3001f47
+

@@ -11,3 +11,13 @@ curl_installer: curl -s http://getboiler.com/install | sh
 wget_installer: wget -qO- http://getboiler.com/install | sh -
 
 gauges_id: 52d048d88bfdf733e3001f47
+
+menu:
+- text: About
+  url: /about
+- text: Guides
+  url: /guides
+- text: Registry
+  url: http://registry.getboiler.com
+- text: View on Github&nbsp;&rarr;
+  url: https://github.com/nicinabox/boiler

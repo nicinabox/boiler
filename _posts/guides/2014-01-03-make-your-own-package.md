@@ -5,6 +5,10 @@ categories: guides
 excerpt: Start with an idea, end with a distributable package for unRAID
 ---
 
+<p class="lead">
+  Making a package is easy. This guide is broken into bite-size chunks and covers a lot in detail.
+</p>
+
 ## Getting started
 
 You'll need:

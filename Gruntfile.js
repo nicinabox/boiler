@@ -37,6 +37,7 @@ module.exports = function(grunt) {
           'assets/javascripts/application.js': [
             'bower_components/jquery/jquery.js',
             '_javascripts/bootstrap/collapse.js',
+            '_javascripts/bootstrap/tab.js',
             '_javascripts/application.js'
           ]
         }

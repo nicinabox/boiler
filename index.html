@@ -20,8 +20,15 @@ title: Boiler
   <div class="fluid-container-lg">
     <div class="row">
       <div class="col-sm-12">
-        <strong>Install for unRAID: </strong><br>
-        <pre class="bash">{{site.curl_installer}}</pre>
+        <strong>Install for unRAID</strong>
+        <small class="install-options">
+          <a href="#install-with-curl">Prefer curl?</a>
+          <a href="#install-with-wget" class="active">Prefer wget?</a>
+        </small>
+        <div class="tab-content">
+          <pre id="install-with-curl" class="tab-pane active">{{site.curl_installer}}</pre>
+          <pre id="install-with-wget" class="tab-pane">{{site.wget_installer}}</pre>
+        </div>
       </div>
     </div>
   </div>

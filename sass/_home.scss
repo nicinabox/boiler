@@ -25,4 +25,9 @@
     float: left;
     padding: 10px;
   }
+  @media screen and (max-width: $container-sm) {
+    a {
+      float: none;
+    }
+  }
 }

@@ -15,6 +15,28 @@ Distributed packages are tarballs designed to be standalone-compatible with Slac
 
 A package can be anything you want to distribute. It could be a web app, a command line tool, daemon, or Slackware package that provides extra functionality to unRAID, like openssh.
 
+## Package structure
+
+This is a tree from the boiler package itself. Each package follow the same structure of organization.
+
+    ├── README.md
+    ├── bin
+    │   └── boiler
+    ├── boiler.json
+    ├── etc
+    │   ├── bundlerc
+    │   └── gemrc
+    ├── install
+    │   └── doinst.sh
+    ├── install.sh
+    └── lib
+        ├── boiler
+        │   ├── cli.rb
+        │   ├── helpers.rb
+        │   ├── slackpack.rb
+        │   └── version.rb
+        └── boiler.rb
+
 ## Special files
 
 There are some special files boiler looks for when creating a tarball.
@@ -44,7 +66,6 @@ The meat-and-potatoes of a boiler package. It is required to register a package.
 Prefix: `/usr/docs/NAME/`
 
 You should include a readme in your project detailing what your project is, how it install it, where to find configurations, etc.
-
 
 ## The boiler.json
 

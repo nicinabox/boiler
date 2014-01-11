@@ -1,0 +1,17 @@
+{
+  "name": "getboiler.com",
+  "version": "0.0.0",
+  "main": "index.html",
+  "author": "nicinabox",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "latest",
+    "grunt-jekyll": "latest",
+    "grunt-sass": "~0.9.0",
+    "grunt-concurrent": "latest",
+    "grunt-contrib-watch": "latest",
+    "grunt-contrib-compass": "~0.7.0",
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-uglify": "~0.2.7"
+  }
+}

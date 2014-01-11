@@ -3,7 +3,6 @@ name: Boiler
 markdown: redcarpet
 pygments: true
 permalink: /:categories/:title
-exclude: [sass]
 
 # App
 package_name: boiler

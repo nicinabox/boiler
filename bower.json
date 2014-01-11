@@ -1,0 +1,8 @@
+{
+  "name": "getboiler.com",
+  "version": "0.0.1",
+  "main": "assets/stylesheets/application.css",
+  "dependencies": {
+    "jquery": "latest"
+  }
+}

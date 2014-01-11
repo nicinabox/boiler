@@ -1,0 +1,44 @@
+.fluid-container {
+  padding: 0 15px;
+}
+.fluid-container-lg {
+  padding: 0 30px;
+}
+
+.jumbotron {
+  .text-muted {
+    color: white;
+    @include opacity(0.5);
+  }
+  h1 small {
+    font-size: 40%;
+  }
+}
+
+.navbar-default {
+  background: $brand-primary;
+  border-bottom-color: $brand-primary-darker;
+  .navbar-brand {
+    color: $brand-primary-darker;
+    font-weight: bold;
+    &:hover {
+      color: white;
+    }
+  }
+  .navbar-nav > li > a {
+    color: white;
+    &:hover {
+      color: white;
+      background: $brand-primary-darker;
+    }
+  }
+}
+
+.navbar-brand {
+  .text-muted {
+    color: $brand-primary-darker;
+    font-weight: normal;
+    font-size: 70%;
+    line-height: 1;
+  }
+}

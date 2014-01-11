@@ -24,7 +24,7 @@ If you're unfamiliar with using git, check out [Github’s articles](https://hel
 Clone the Boiler repo (we’ll clone to the ~/code directory here):
 
     mkdir -p ~/code && cd $_
-    git clone https://github.com:nicinabox/boiler.git
+    git clone https://github.com/nicinabox/boiler.git
 
 Install the Boiler dependencies
 

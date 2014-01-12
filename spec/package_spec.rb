@@ -63,9 +63,15 @@ describe Boiler::Package do
     @package.prefix_files
     old_bin = "#{@package.tmp}/bin"
     new_bin = "#{@package.tmp}/usr/local/boiler/boiler-hello/bin"
-    puts `ls #{@package.tmp}/usr/local/boiler/boiler-hello`
 
     File.exists?(old_bin).should be_false
     File.exists?(new_bin).should be_true
+  end
+
+  it "archives the tmp directory" do
+    @package.archive
+    pkg = 'boiler-hello-0.1.0-noarch-unraid.tgz'
+    File.exists?(pkg).should be_true
+    FileUtils.rm pkg
   end
 end

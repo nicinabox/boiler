@@ -7,16 +7,15 @@ module Boiler
     include Boiler::Helpers
     source_root Dir.pwd
 
-    attr_accessor :config, :package_name, :tmp, :src,
-                  :name_to_param, :package_manifest
+    attr_accessor :config, :tmp, :src, :name_to_param,
+                  :package_manifest
 
     def initialize(dir)
       @src              = File.expand_path dir
       @package_manifest = load_manifest
       @name_to_param    = to_simple_param package_manifest[:name]
       @config           = merge_defaults_with_manifest
-      @package_name     = target_file_name
-      @tmp              = "#{tmp_boiler}/#{@package_name}"
+      @tmp              = "#{tmp_boiler}/#{target_file_name}"
 
       # For Thor
       @options           = {}
@@ -134,11 +133,23 @@ module Boiler
       end
     end
 
+    def archive
+      cwd = Dir.pwd
+
+      if unraid?
+        `cd #{tmp} && makepkg -c y ../#{target_file_name}.tgz`
+      else
+        `cd #{tmp} && tar -czf ../#{target_file_name}.tgz .`
+      end
+
+      FileUtils.mv "#{tmp_boiler}/#{target_file_name}.tgz", cwd
+    end
+
   private
 
     def merge_defaults_with_manifest
       d = defaults(package_manifest[:name])
-      d.deep_merge(package_manifest)
+      d.deep_merge!(package_manifest)
     end
 
     def load_manifest
@@ -202,10 +213,10 @@ module Boiler
 
     def target_file_name
       @target_file_name ||= [
-        @config[:name],
-        @config[:version],
-        @config[:arch],
-        @config[:build]
+        config[:name],
+        config[:version],
+        config[:arch],
+        config[:build]
       ].join('-')
     end
   end

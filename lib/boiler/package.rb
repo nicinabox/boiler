@@ -8,7 +8,7 @@ module Boiler
     source_root Dir.pwd
 
     attr_accessor :config, :tmp, :src, :name_to_param,
-                  :package_manifest
+                  :package_manifest, :file_name
 
     def initialize(dir)
       @src              = File.expand_path dir
@@ -227,5 +227,10 @@ module Boiler
         config[:build]
       ].join('-')
     end
+
+    def full_target_file_name
+      target_file_name + '.tgz'
+    end
+
   end
 end

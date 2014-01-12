@@ -20,7 +20,7 @@ module Boiler
 
       # For Thor
       @options           = {}
-      @destination_stack = [@tmp]
+      @destination_stack = [tmp]
     end
 
     def build
@@ -30,6 +30,7 @@ module Boiler
       run_tasks
       prefix_files
       archive
+      cleanup tmp
 
       file_name
     end
@@ -117,21 +118,22 @@ module Boiler
     def setup_post_install
       # Make sure we have a file
       doinst = "install/doinst.sh"
-      unless File.exists? "#{@tmp}/#{doinst}"
+      unless File.exists? "#{tmp}/#{doinst}"
         create_file doinst, verbose: false
       end
 
       # Collect everything to inject
-      config[:post_install].unshift map_dependencies_with_trolley
-      config[:post_install].concat map_symlinks
-      config[:post_install].concat map_preserve_config_cmds
-      config[:post_install].concat [] # Will be a new line
-
+      config[:post_install].unshift map_symlinks
+      config[:post_install].unshift map_preserve_config_cmds
       config[:post_install].flatten!
 
-      # Prepend it!
       prepend_to_file doinst, verbose: false do
-        config[:post_install].join("\n")
+        install_trolley +
+        map_dependencies_with_trolley.join("\n") + "\n"
+      end
+
+      append_to_file doinst, verbose: false do
+        config[:post_install].join("\n") + "\n"
       end
     end
 
@@ -250,6 +252,14 @@ module Boiler
 
     def full_target_file_name
       target_file_name + '.tgz'
+    end
+
+    def install_trolley
+      <<-code
+if [[ `command -v trolley` == "" ]]; then
+  wget -qO- --no-check-certificate https://raw.github.com/nicinabox/trolley/master/install.sh | sh -
+fi
+      code
     end
 
   end

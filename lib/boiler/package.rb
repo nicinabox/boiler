@@ -67,7 +67,7 @@ module Boiler
       }
     end
 
-    def preserve_config_cmds
+    def map_preserve_config_cmds
       cmds = []
       target_config_path = configs_path.gsub('_config', 'config')
 
@@ -81,6 +81,15 @@ module Boiler
 
       # Remove the original _config directory regardless
       cmds << "rm -rf /#{configs_path}\n"
+    end
+
+    def map_env_vars
+      name              = @config[:name].upcase.gsub(/\-/, '_')
+      target_config_dir = configs_path.gsub('_config', 'config')
+
+      [
+        "#{name}_CONFIG_PATH=/#{target_config_dir}"
+      ]
     end
 
   private

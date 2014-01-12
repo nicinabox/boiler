@@ -31,7 +31,14 @@ describe Boiler::Package do
   end
 
   it "maps commands to preserve existing config files" do
-    commands = @package.preserve_config_cmds
+    commands = @package.map_preserve_config_cmds
     commands.should be_a Array
+  end
+
+  it "maps unique env variables" do
+    env_vars = @package.map_env_vars
+    env_vars.should == [
+      "BOILER_HELLO_CONFIG_PATH=/boot/plugins/custom/boiler-hello/config"
+    ]
   end
 end

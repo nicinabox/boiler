@@ -198,7 +198,7 @@ module Boiler
         arch: 'noarch',
         build: 'unraid',
         prefix: {
-          :"#{bin_path}" => [
+          :"#{usr_local_path}" => [
               'bin',
               'lib',
               'Gemfile*'
@@ -222,10 +222,14 @@ module Boiler
     end
 
     def env_path
-      "#{bin_path}/env"
+      "#{usr_local_path}/env"
     end
 
     def bin_path
+      "#{usr_local_path}/bin"
+    end
+
+    def usr_local_path
       "usr/local/boiler/#{name_to_param}"
     end
 

@@ -32,7 +32,7 @@ describe Boiler::Package do
   it "maps symlinks" do
     symlinks = @package.map_symlinks
     symlinks.should == [
-      "ln -sf /usr/local/boiler/boiler-hello/hello /usr/local/bin/hello"
+      "ln -sf /usr/local/boiler/boiler-hello/bin/hello /usr/local/bin/hello"
     ]
   end
 

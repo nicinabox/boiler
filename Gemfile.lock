@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/erikhuda/thor.git
-  revision: 577fcc457805451eb5e0c15fc382dfb65a8af224
+  revision: d9d26adcd3ee0d5af04e41bcd6db0ea64c11766f
   specs:
     thor (0.18.1)
 

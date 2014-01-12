@@ -39,7 +39,7 @@ module Boiler
       paths = Dir.glob("#{src}/**/*")
       paths.reject! do |path|
         File.directory? path or
-        config[:ignore].include? File.basename(path)
+        map_ignores.index { |p| path.include? p }
       end
 
       # Make sure we have a place to copy to
@@ -53,6 +53,12 @@ module Boiler
         FileUtils.mkdir_p target
         FileUtils.cp_r path, "#{target}/#{name}"
       end
+    end
+
+    def map_ignores
+      @map_ignores ||= config[:ignore].map { |path|
+        File.expand_path "#{src}/#{path}"
+      }
     end
 
     def map_dependencies_with_trolley

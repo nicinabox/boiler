@@ -28,7 +28,11 @@
     "ruby": ">=1.9.3"
   },
 
-  "ignore": ["bower_components", "node_modules"],
+  "ignore": [
+    "bower_components",
+    "node_modules",
+    "spec"
+    ],
   "prefix": {
   },
 

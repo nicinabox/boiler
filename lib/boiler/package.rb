@@ -67,6 +67,22 @@ module Boiler
       }
     end
 
+    def preserve_config_cmds
+      cmds = []
+      target_config_path = configs_path.gsub('_config', 'config')
+
+      # Copy config files if they don't exist
+      # Must be bash to be installable with installpkg
+      cmds << <<-CMD.gsub(/^ {8}/, '')
+        if [ ! -f /#{target_config_path} ]; then
+          cp -r /#{configs_path} /#{target_config_path}
+        fi
+      CMD
+
+      # Remove the original _config directory regardless
+      cmds << "rm -rf /#{configs_path}\n"
+    end
+
   private
 
     def merge_defaults_with_manifest
@@ -123,7 +139,7 @@ module Boiler
     end
 
     def configs_path
-      "/boot/plugins/custom/#{@name_to_param}/_config"
+      "boot/plugins/custom/#{@name_to_param}/_config"
     end
 
     def manifest_path

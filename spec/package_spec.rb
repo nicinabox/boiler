@@ -29,4 +29,9 @@ describe Boiler::Package do
       "ln -sf /usr/local/boiler/boiler-hello/hello /usr/local/bin/hello"
     ]
   end
+
+  it "maps commands to preserve existing config files" do
+    commands = @package.preserve_config_cmds
+    commands.should be_a Array
+  end
 end

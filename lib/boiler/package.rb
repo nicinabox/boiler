@@ -111,7 +111,7 @@ module Boiler
     def setup_post_install
       # Make sure we have a file
       doinst = "install/doinst.sh"
-      unless File.exists? "#{@tmp}/doinst"
+      unless File.exists? "#{@tmp}/#{doinst}"
         create_file doinst, verbose: false
       end
 

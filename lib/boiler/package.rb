@@ -2,12 +2,12 @@ require 'boiler/helpers'
 
 module Boiler
   class Package
-    include Boiler::Helpers
+    include Thor::Base
     include Thor::Actions
+    include Boiler::Helpers
+    source_root Dir.pwd
 
-    attr_accessor :config
-    attr_accessor :package_name
-    attr_accessor :tmp
+    attr_accessor :config, :package_name, :tmp, :src
 
     def initialize(dir)
       @src           = File.expand_path dir
@@ -15,6 +15,10 @@ module Boiler
       @name_to_param = to_simple_param @config[:name]
       @package_name  = target_file_name
       @tmp           = "#{tmp_boiler}/#{@package_name}"
+
+      # For Thor
+      @options           = {}
+      @destination_stack = [@tmp]
     end
 
     def copy_files_to_tmp
@@ -90,6 +94,25 @@ module Boiler
       [
         "#{name}_CONFIG_PATH=/#{target_config_dir}"
       ]
+    end
+
+    def setup_post_install
+      # Make sure we have a file
+      doinst = "install/doinst.sh"
+      create_file doinst, verbose: false
+
+      # Collect everything to inject
+      config[:post_install].unshift map_dependencies_with_trolley
+      config[:post_install].concat map_symlinks
+      config[:post_install].concat map_preserve_config_cmds
+      config[:post_install].concat [] # Will be a new line
+
+      config[:post_install].flatten!
+
+      # Prepend it!
+      prepend_to_file doinst, verbose: false do
+        config[:post_install].join("\n")
+      end
     end
 
   private

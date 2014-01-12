@@ -41,4 +41,10 @@ describe Boiler::Package do
       "BOILER_HELLO_CONFIG_PATH=/boot/plugins/custom/boiler-hello/config"
     ]
   end
+
+  it "sets up post installer" do
+    @package.setup_post_install
+    doinst = "#{@package.tmp}/install/doinst.sh"
+    File.exists?(doinst).should be_true
+  end
 end

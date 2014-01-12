@@ -39,7 +39,7 @@ module Boiler
       paths = Dir.glob("#{src}/**/*")
       paths.reject! do |path|
         File.directory? path or
-        @config[:ignore].include? File.basename(path)
+        config[:ignore].include? File.basename(path)
       end
 
       # Make sure we have a place to copy to

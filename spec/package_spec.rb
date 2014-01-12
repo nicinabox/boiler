@@ -18,6 +18,7 @@ describe Boiler::Package do
     @package.copy_files_to_tmp
     files = Dir.glob("#{@package.tmp}/*")
     files.should_not be_empty
+    files.should_not include "#{@package.tmp}/ignore_me"
   end
 
   it "maps dependencies" do

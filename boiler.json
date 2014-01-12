@@ -28,7 +28,7 @@
     "ruby": ">=1.9.3"
   },
 
-  "ignore": ["install.sh"],
+  "ignore": ["bower_components", "node_modules"],
   "prefix": {
   },
 

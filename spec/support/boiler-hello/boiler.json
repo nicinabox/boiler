@@ -1,0 +1,8 @@
+{
+  "name": "boiler-hello",
+  "version": "0.1.0",
+  "dependencies": {
+    "fake1": "1.0.0",
+    "fake2": "http://example.com/fake2.tgz"
+  }
+}

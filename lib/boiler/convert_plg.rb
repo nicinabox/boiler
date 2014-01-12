@@ -25,26 +25,66 @@ module Boiler
 
     def build
       copy_files_to_tmp
+      update_doinst
       config.deep_merge! manifest_wizard(config)
+      add_dependencies_to_config
       create_manifest
+    end
+
+    def map_dependencies
+      plugin['FILE'].map { |f|
+        if dependency_url? f['URL']
+          f['URL'].gsub('--no-check-certificate', '').strip
+        end
+      }.compact
+    end
+
+    def map_assets
+      plugin['FILE'].map { |f|
+        if dependency_asset? f['URL']
+          f['URL']
+        end
+      }.compact
+    end
+
+    def map_files
+      plugin['FILE'].map { |f|
+        unless dependency_asset? f['Name'] or
+               dependency_url? f['Name']
+
+          { :"#{f['Name']}" => f['INLINE'] }
+        end
+      }.compact
+    end
+
+    def map_scripts
+      plugin['FILE'].map { |f|
+        f['Name'] if f['Run'] == '/bin/bash'
+      }.compact
+    end
+
+    def add_dependencies_to_config
+      map_dependencies.each do |url|
+        dep = { :"#{dependency_name(url)}" => url }
+        config[:dependencies].merge!(dep)
+      end
     end
 
     def copy_files_to_tmp
       FileUtils.mkdir_p(tmp)
 
-      plugin['FILE'].each do |f|
-        # Dependencies
-        if f['URL']
-          collect_dependencies(f)
+      map_files.each do |data|
+        create_package_file(data)
+      end
+    end
 
-        # Post installer
-        elsif f['Run'] == '/bin/bash'
-          config[:post_install] << f['INLINE']
+    def update_doinst
+      post_installer = "#{tmp}/install/doinst.sh"
 
-        # Create files
-        else
-          create_package_file(f)
-        end
+      create_file post_installer unless File.exist? post_installer
+
+      append_to_file post_installer do
+        map_scripts.join("\n") + "\n"
       end
     end
 
@@ -57,38 +97,37 @@ module Boiler
   private
 
     def collect_dependencies(f)
-      url = extract_dependency(f) || extract_asset(f)
+      dep = extract_dependency(f) || extract_asset(f)
 
       # Add to dependencies
-      if url.is_a? String
-        config[:dependencies].merge(
-          :"#{dependency_name(url)}" => url
-        )
+      if dep.is_a? String
+        dep.gsub!('--no-check-certificate', '')
+        config[:dependencies].merge!(:"#{dependency_name(dep)}" => dep)
 
       else
         # Try to download remote assets
-        asset_dest = "#{tmp}#{url[:dest]}"
+        asset_dest = "#{tmp}#{dep[:dest]}"
         asset      = File.basename asset_dest
         dirname    = File.dirname asset_dest
-        fetch_url  = url[:url]
+        fetch_url  = dep[:url]
 
         `mkdir -p #{dirname} && wget -q #{fetch_url} -O #{asset_dest}`
       end
     end
 
-    def create_package_file(f)
-      path = f['Name']
+    def create_package_file(data)
+      path = data.keys.first.to_s
 
       unless /var\/log\/plugins/ =~ path
         create_file "#{tmp}#{path}" do
-          f['INLINE']
+          data[path.to_sym]
         end
       end
     end
 
     def dependency_name(url)
       basename = File.basename url
-      basename.gsub(/\..+{3}/, '')
+      basename.gsub(/\.\S{3}$/, '')
     end
 
     def defaults
@@ -103,9 +142,7 @@ module Boiler
     end
 
     def extract_dependency(f)
-      if /tx|jz$/ =~ f['URL']
-        f['URL']
-      end
+      f['URL'] if dependency_url? f['URL']
     end
 
     def extract_asset(f)
@@ -113,6 +150,14 @@ module Boiler
         :dest => f['Name'],
         :url  => f['URL']
       }
+    end
+
+    def dependency_url?(url)
+      /tx|jz$/ =~ url
+    end
+
+    def dependency_asset?(url)
+      /png|jpg|jpeg|gif$/ =~ url
     end
 
   end

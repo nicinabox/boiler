@@ -10,10 +10,11 @@ module Boiler
     attr_accessor :tmp
 
     def initialize(dir)
-      @src          = File.expand_path dir
-      @config       = merge_defaults_with_manifest
-      @package_name = target_file_name
-      @tmp      = "#{tmp_boiler}/#{@package_name}"
+      @src           = File.expand_path dir
+      @config        = merge_defaults_with_manifest
+      @name_to_param = to_simple_param @config[:name]
+      @package_name  = target_file_name
+      @tmp           = "#{tmp_boiler}/#{@package_name}"
     end
 
     def copy_files_to_tmp
@@ -37,7 +38,36 @@ module Boiler
       end
     end
 
-    private
+    def map_dependencies_with_trolley
+      if config[:dependencies]
+        config[:dependencies].map do |pkg, version|
+          if /^http/ =~ version
+            "trolley install #{version}"
+          else
+            "trolley install #{pkg} #{version}"
+          end
+        end
+      end
+    end
+
+    def map_symlinks
+      bins = Dir.glob "#{@tmp}/bin/*"
+
+      if bins.any?
+        bin_map = bins.map { |bin|
+          bin_name = File.basename bin
+          { :"/#{bin_path}/#{bin_name}" => "/usr/local/bin/#{bin_name}" }
+        }
+
+        config[:symlink].merge! bin_map.first
+      end
+
+      config[:symlink].map { |src, dest|
+        "ln -sf #{src} #{dest}"
+      }
+    end
+
+  private
 
     def merge_defaults_with_manifest
       package_manifest = load_manifest
@@ -62,19 +92,19 @@ module Boiler
         arch: 'noarch',
         build: 'unraid',
         prefix: {
-          :"usr/local/boiler/#{to_simple_param name}" => [
+          :"#{bin_path}" => [
               'bin',
               'lib',
               'Gemfile*'
           ],
-          :"#{configs(name)}" => [
+          :"#{configs_path}" => [
             'config/*'
           ],
-          :"usr/docs/#{to_simple_param name}" => [
+          :"#{docs_path}" => [
             'README.*',
             'LICENSE*'
           ],
-          :"var/log/boiler/#{to_simple_param name}" => [
+          :"#{manifest_path}" => [
             'boiler.json'
           ]
         },
@@ -84,8 +114,20 @@ module Boiler
       }
     end
 
-    def configs(name)
-      "/boot/plugins/custom/#{to_simple_param name}/_config"
+    def bin_path
+      "usr/local/boiler/#{@name_to_param}"
+    end
+
+    def docs_path
+      "usr/docs/#{@name_to_param}"
+    end
+
+    def configs_path
+      "/boot/plugins/custom/#{@name_to_param}/_config"
+    end
+
+    def manifest_path
+      "var/log/boiler/#{@name_to_param}"
     end
 
     def target_file_name

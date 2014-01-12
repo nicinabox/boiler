@@ -138,6 +138,8 @@ if Boiler::Helpers.unraid?
   Dir.chdir File.expand_path('../..', __FILE__)
   Bundler.setup(:default)
   Dir.chdir pwd
+else
+  Bundler.setup(:default)
 end
 
 require 'thor'

@@ -150,6 +150,22 @@ module Boiler
       end
     end
 
+    def create_dynamic_env_vars(tmp_dir, config)
+      name              = config[:name].upcase
+      src_config_dir    = configs(config[:name])
+      target_config_dir = src_config_dir.gsub('_config', 'config')
+      env_file          = "#{tmp_dir}/etc/#{to_simple_param name}_env"
+
+      FileUtils.mkdir_p "#{tmp_dir}/etc"
+      FileUtils.touch   env_file
+
+      env_vars = [
+        "#{name}_CONFIG_PATH=#{target_config_dir}"
+      ]
+
+      append_to_file env_file, env_vars.join("\n")
+    end
+
     def create_package(src)
       src = File.expand_path src
 
@@ -173,6 +189,9 @@ module Boiler
       setup_dependencies tmp_dir, config
       setup_symlinks tmp_dir, config
       setup_configs tmp_dir, config
+
+      create_dynamic_env_vars tmp_dir, config
+
       setup_post_install tmp_dir, config
 
       prepend_post_install tmp_dir, config

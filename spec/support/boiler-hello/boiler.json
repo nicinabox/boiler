@@ -4,5 +4,6 @@
   "dependencies": {
     "fake1": "1.0.0",
     "fake2": "http://example.com/fake2.tgz"
-  }
+  },
+  "tasks": ["test"]
 }

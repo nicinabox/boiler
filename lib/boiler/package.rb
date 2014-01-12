@@ -122,6 +122,13 @@ module Boiler
       end
     end
 
+    def run_tasks
+      config[:tasks].each do |task|
+        status "Running #{task}"
+        `#{task}`
+      end
+    end
+
     def prefix_files
       config[:prefix].each do |prefix, srcs|
         dest = "#{tmp}/#{prefix}"
@@ -187,6 +194,7 @@ module Boiler
         },
         ignore: [],
         symlink: {},
+        tasks: [],
         post_install: []
       }
     end

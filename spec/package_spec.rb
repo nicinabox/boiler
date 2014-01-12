@@ -59,6 +59,12 @@ describe Boiler::Package do
     File.exists?(env_file).should be_true
   end
 
+  it "runs tasks" do
+    @package.run_tasks.should == [
+      'test'
+    ]
+  end
+
   it "prefixes files" do
     @package.prefix_files
     old_bin = "#{@package.tmp}/bin"

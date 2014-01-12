@@ -1,13 +1,12 @@
 require 'bundler'
 require 'crack'
 require 'boiler/helpers'
-require 'boiler/slackpack'
+require 'boiler/package'
 require 'boiler/version'
 
 module Boiler
   class CLI < Thor
     include HTTParty
-    include Boiler::Slackpack
     include Boiler::Helpers
 
     base_uri 'http://boiler-registry.herokuapp.com'
@@ -24,7 +23,8 @@ module Boiler
 
       status "Packing #{name}"
 
-      name = create_package dir
+      package = Package.new dir
+      name = package.file_name
 
       pkg = "#{Dir.pwd}/#{name}"
       status "Done! Your package is at #{pkg}", :green

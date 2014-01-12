@@ -16,10 +16,20 @@ module Boiler
       @name_to_param    = to_simple_param package_manifest[:name]
       @config           = merge_defaults_with_manifest
       @tmp              = "#{tmp_boiler}/#{target_file_name}"
+      @file_name        = full_target_file_name
 
       # For Thor
       @options           = {}
       @destination_stack = [@tmp]
+    end
+
+    def make_package
+      copy_files_to_tmp
+      setup_env
+      setup_post_install
+      run_tasks
+      prefix_files
+      archive
     end
 
     def copy_files_to_tmp
@@ -160,7 +170,7 @@ module Boiler
     end
 
     def load_manifest
-      JSON.parse(File.read(manifest(@src)), {
+      JSON.parse(File.read(manifest(src)), {
         :symbolize_names => true
       })
     end

@@ -27,6 +27,10 @@ module Boiler
       "#{tmp_boiler}/#{name}"
     end
 
+    def required
+      %w(name version)
+    end
+
     def clone_repo(name, url, version=nil)
       dest = tmp_repo(name)
 

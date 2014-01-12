@@ -1,8 +1,13 @@
 require 'boiler/package'
 
 describe Boiler::Package do
-  before(:all) do
+  before(:each) do
     @package = Boiler::Package.new 'spec/support/boiler-hello'
+    @package.copy_files_to_tmp
+  end
+
+  after(:each) do
+    FileUtils.rm_rf '/tmp/boiler'
   end
 
   it "parses boiler.json" do
@@ -46,5 +51,21 @@ describe Boiler::Package do
     @package.setup_post_install
     doinst = "#{@package.tmp}/install/doinst.sh"
     File.exists?(doinst).should be_true
+  end
+
+  it "creates env file" do
+    @package.setup_env
+    env_file = "#{@package.tmp}/usr/local/boiler/boiler-hello/env"
+    File.exists?(env_file).should be_true
+  end
+
+  it "prefixes files" do
+    @package.prefix_files
+    old_bin = "#{@package.tmp}/bin"
+    new_bin = "#{@package.tmp}/usr/local/boiler/boiler-hello/bin"
+    puts `ls #{@package.tmp}/usr/local/boiler/boiler-hello`
+
+    File.exists?(old_bin).should be_false
+    File.exists?(new_bin).should be_true
   end
 end

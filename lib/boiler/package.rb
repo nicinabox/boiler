@@ -7,14 +7,16 @@ module Boiler
     include Boiler::Helpers
     source_root Dir.pwd
 
-    attr_accessor :config, :package_name, :tmp, :src
+    attr_accessor :config, :package_name, :tmp, :src,
+                  :name_to_param, :package_manifest
 
     def initialize(dir)
-      @src           = File.expand_path dir
-      @config        = merge_defaults_with_manifest
-      @name_to_param = to_simple_param @config[:name]
-      @package_name  = target_file_name
-      @tmp           = "#{tmp_boiler}/#{@package_name}"
+      @src              = File.expand_path dir
+      @package_manifest = load_manifest
+      @name_to_param    = to_simple_param package_manifest[:name]
+      @config           = merge_defaults_with_manifest
+      @package_name     = target_file_name
+      @tmp              = "#{tmp_boiler}/#{@package_name}"
 
       # For Thor
       @options           = {}
@@ -56,7 +58,6 @@ module Boiler
 
     def map_symlinks
       bins = Dir.glob "#{tmp}/bin/*"
-
       if bins.any?
         bin_map = bins.map { |bin|
           bin_name = File.basename bin
@@ -115,12 +116,29 @@ module Boiler
       end
     end
 
+    def setup_env
+      create_file env_path, verbose: false
+      append_to_file env_path, verbose: false do
+        map_env_vars.join("\n")
+      end
+    end
+
+    def prefix_files
+      config[:prefix].each do |prefix, srcs|
+        dest = "#{tmp}/#{prefix}"
+        FileUtils.mkdir_p dest
+        srcs.each do |src|
+          fullpath = "#{tmp}/#{src}"
+          FileUtils.mv Dir.glob(fullpath), dest
+        end
+      end
+    end
+
   private
 
     def merge_defaults_with_manifest
-      package_manifest = load_manifest
       d = defaults(package_manifest[:name])
-      d.deep_merge!(package_manifest)
+      d.deep_merge(package_manifest)
     end
 
     def load_manifest
@@ -162,20 +180,24 @@ module Boiler
       }
     end
 
+    def env_path
+      "#{bin_path}/env"
+    end
+
     def bin_path
-      "usr/local/boiler/#{@name_to_param}"
+      "usr/local/boiler/#{name_to_param}"
     end
 
     def docs_path
-      "usr/docs/#{@name_to_param}"
+      "usr/docs/#{name_to_param}"
     end
 
     def configs_path
-      "boot/plugins/custom/#{@name_to_param}/_config"
+      "boot/plugins/custom/#{name_to_param}/_config"
     end
 
     def manifest_path
-      "var/log/boiler/#{@name_to_param}"
+      "var/log/boiler/#{name_to_param}"
     end
 
     def target_file_name

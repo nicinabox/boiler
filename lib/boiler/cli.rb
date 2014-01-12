@@ -214,7 +214,7 @@ module Boiler
     end
 
     # This converter was designed against Influencer's plg code.
-    # It is not guaranteed to work with any plg.
+    # It is not guaranteed to be accurate with all plgs.
     desc 'convert PLG', 'Convert a plg to boiler package'
     def convert(plg)
       package = Boiler::ConvertPlg.new plg

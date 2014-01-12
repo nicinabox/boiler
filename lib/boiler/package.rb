@@ -111,7 +111,9 @@ module Boiler
     def setup_post_install
       # Make sure we have a file
       doinst = "install/doinst.sh"
-      create_file doinst, verbose: false
+      unless File.exists? "#{@tmp}/doinst"
+        create_file doinst, verbose: false
+      end
 
       # Collect everything to inject
       config[:post_install].unshift map_dependencies_with_trolley

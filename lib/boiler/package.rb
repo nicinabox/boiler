@@ -23,19 +23,19 @@ module Boiler
 
     def copy_files_to_tmp
       # Collect paths that aren't a directory or in ignore
-      paths = Dir.glob("#{@src}/**/*")
+      paths = Dir.glob("#{src}/**/*")
       paths.reject! do |path|
         File.directory? path or
         @config[:ignore].include? File.basename(path)
       end
 
       # Make sure we have a place to copy to
-      FileUtils.mkdir_p(@tmp)
+      FileUtils.mkdir_p(tmp)
 
       # Copy each file to tmp
       paths.each do |path|
         dir, name = File.dirname(path), File.basename(path)
-        target = dir.gsub(@src, @tmp)
+        target = dir.gsub(src, tmp)
 
         FileUtils.mkdir_p target
         FileUtils.cp_r path, "#{target}/#{name}"
@@ -55,7 +55,7 @@ module Boiler
     end
 
     def map_symlinks
-      bins = Dir.glob "#{@tmp}/bin/*"
+      bins = Dir.glob "#{tmp}/bin/*"
 
       if bins.any?
         bin_map = bins.map { |bin|
@@ -84,11 +84,11 @@ module Boiler
       CMD
 
       # Remove the original _config directory regardless
-      cmds << "rm -rf /#{configs_path}\n"
+      cmds << "rm -rf /#{configs_path}"
     end
 
     def map_env_vars
-      name              = @config[:name].upcase.gsub(/\-/, '_')
+      name              = config[:name].upcase.gsub(/\-/, '_')
       target_config_dir = configs_path.gsub('_config', 'config')
 
       [

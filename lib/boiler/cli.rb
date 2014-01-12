@@ -1,5 +1,5 @@
 require 'rubygems'
-require 'bundler/setup'
+require 'bundler'
 require 'boiler/helpers'
 require 'boiler/package'
 require 'boiler/convert_plg'

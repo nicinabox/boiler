@@ -2,6 +2,7 @@ require 'git'
 require 'httparty'
 require 'fileutils'
 require 'deep_merge'
+require 'crack'
 
 module Boiler
   module Helpers
@@ -90,7 +91,7 @@ module Boiler
 
     def default(*vals)
       vals.each do |val|
-        return val unless (val.empty? or val.nil?)
+        return val unless (val.nil? or val.empty?)
       end
     end
 
@@ -100,22 +101,9 @@ module Boiler
       config[:authors]     = ask "authors:", default: default(config[:authors], name_and_email)
       config[:description] = ask "description:", default: config[:description]
       config[:homepage]    = ask "homepage:", default: config[:homepage]
-      config[:license]     = ask "license:", default: config[:license]
+      config[:license]     = ask "license:", default: default(config[:license], 'MIT')
 
       config
-    end
-
-    def extract_dependency(f)
-      if /tx|jz$/ =~ f['URL']
-        f['URL']
-      end
-    end
-
-    def extract_asset(f)
-      {
-        :dest => f['Name'],
-        :url  => f['URL']
-      }
     end
 
     def check_for_update

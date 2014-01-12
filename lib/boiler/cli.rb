@@ -1,7 +1,8 @@
-require 'bundler'
-require 'crack'
+require 'rubygems'
+require 'bundler/setup'
 require 'boiler/helpers'
 require 'boiler/package'
+require 'boiler/convert_plg'
 require 'boiler/version'
 
 module Boiler
@@ -187,7 +188,7 @@ module Boiler
     desc 'init [DIRECTORY]', 'Create a boiler.json in the specified directory'
     def init(directory = Dir.pwd)
       path = File.expand_path(directory)
-      config = manifest_wizard defaults(File.basename(path))
+      config = manifest_wizard
 
       FileUtils.mkdir_p path
 
@@ -212,59 +213,16 @@ module Boiler
       install name, version
     end
 
-    # This converter was designed against Influencer's plg code. It's not guaranteed to work with any plg.
+    # This converter was designed against Influencer's plg code.
+    # It is not guaranteed to work with any plg.
     desc 'convert PLG', 'Convert a plg to boiler package'
     def convert(plg)
-      file    = File.read plg
-      name    = File.basename(plg).gsub(/\.plg$/, '')
-      xml     = Crack::XML.parse(file)
-      plugin  =  xml['PLUGIN']
-      tmp_dir = "#{File.dirname(plg)}/#{name}"
-      config  = defaults(name)
+      package = Boiler::ConvertPlg.new plg
+      status "Converting #{package.base_file_name}"
 
-      status "Converting #{config[:name]}"
+      package.build
 
-      FileUtils.mkdir_p(tmp_dir)
-
-      plugin['FILE'].each do |f|
-        # Dependencies
-        if f['URL']
-          url = extract_dependency(f) || extract_asset(f)
-          if url.is_a? String
-            config[:dependencies] << url
-          else
-            asset_dest = "#{tmp_dir}#{url[:dest]}"
-            asset      = File.basename asset_dest
-            dirname    = File.dirname asset_dest
-            fetch_url  = url[:url]
-
-            status "Fetching #{asset}"
-            `mkdir -p #{dirname} && wget -q #{fetch_url} -O #{asset_dest}`
-          end
-
-        # Installer
-        elsif f['Run'] == '/bin/bash'
-          config[:post_install] << f['INLINE']
-
-        # Create files
-        else
-          file_name = f['Name']
-          unless /var\/log\/plugins/ =~ file_name
-            FileUtils.mkdir_p(tmp_dir + File.dirname(file_name))
-            File.open("#{tmp_dir}#{file_name}", "w") do |f_dest|
-              f_dest.write f['INLINE']
-            end
-          end
-        end
-      end
-
-      config.deep_merge! manifest_wizard(config)
-
-      File.open("#{tmp_dir}/boiler.json", 'w') do |f_boiler|
-        f_boiler.write JSON.pretty_generate(config)
-      end
-
-      status "Please review your package at #{tmp_dir}", :green
+      status "Please review your package at #{package.tmp}", :green
     end
 
     desc 'version', 'Prints version'

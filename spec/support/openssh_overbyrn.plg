@@ -1,0 +1,921 @@
+<?xml version='1.0' standalone='yes'?>
+
+<!DOCTYPE PLUGIN [
+<!ENTITY plugin "OpenSSH">
+<!ENTITY author "overbyrn">
+<!ENTITY plgver "1.4">
+<!ENTITY pkg "/boot/packages">
+<!ENTITY plg "/boot/config/plugins/ssh">
+<!ENTITY img "/boot/config/plugins/images">
+<!ENTITY gui "/usr/local/emhttp/plugins">
+<!ENTITY url1 "https://raw.github.com/overbyrn/UnRAID/master">
+<!ENTITY url2 "https://dl.dropbox.com/u/572553/UnRAID">
+<!ENTITY url3 "http://slackware.cs.utah.edu/pub/slackware/slackware-13.37/patches/packages">
+<!ENTITY dev "false"><!-- set to "true" during plugin development -->
+]>
+
+<PLUGIN>
+<!--
+Copyright 2013, Rich Manton (overbyrn)
+
+This Plugin installs and provides SSH support for unRAID.
+
+Plugin file locations:
+ /boot/plugins/openssh_overbyrn.plg                                     # this file
+ /tmp/plugin-prepare                                                    # network readiness script
+ /tmp/plugin-cleanup                                                    # deletion script
+ /tmp/plugin-install                                                    # installation script
+
+ /boot/packages/openssh-5.9p1-i486-2_slack13.37.txz                     # openssh package
+ /boot/config/plugins/ssh/putty-0.62-i486-1rj.txz                       # custom putty package (puttygen dev build only)
+ 
+ /boot/config/plugins/ssh/ssh.png                                       # icon file (copied to webgui plugin dir)
+ /boot/config/plugins/images/device_status.png                          # icon file (copied to webgui plugin dir)
+ /boot/config/plugins/images/new_config.png                             # icon file (copied to webgui plugin dir)
+ /boot/config/plugins/images/information.png                            # icon file (copied to webgui plugin dir)
+ /boot/config/plugins/ssh/ssh.cfg                                       # non-volatile configuration
+ /boot/config/plugins/ssh/read_me.txt                                   # Help File
+ /etc/rc.d/rc.ssh                                                       # plugin control script
+ /usr/local/emhttp/plugins/ssh/ssh.page                                 # page file for webGui menu system
+ /usr/local/emhttp/plugins/ssh/ssh.php                                  # webGui page code
+
+ /var/log/plugins/ssh                                                   # created upon install success
+ /var/run/ssh/ssh.pid                                                   # run-time pid file
+
+-->
+
+<FILE Name="/tmp/plugin-prepare" Run="/bin/bash">
+<INLINE>
+# Wait until network is ready
+timer=30
+while [ $timer -gt 0 ]; do
+  gateway=$(route -n | awk '/^0.0.0.0/ {print $2}')
+  if [ -n "$gateway" ] &amp;&amp; [ $(ping -q -n -c 1 $gateway | awk -F, '/received/ {print $2}' | awk '{print $1}') -eq 1 ]; then
+    break
+  fi
+  timer=$((timer-1))
+  sleep 1
+done
+if [ $timer -eq 0 ]; then
+  echo "No network communication !!!"
+fi
+# Remove this script
+rm -f /tmp/plugin-prepare
+</INLINE>
+</FILE>
+
+<FILE Name="&plg;/ssh.png">
+<URL>-q --no-check-certificate &url2;/plugin.images/ssh.png</URL>
+</FILE>
+
+<FILE Name="&img;/device_status.png">
+<URL>-q --no-check-certificate &url2;/plugin.images/device_status.png</URL>
+</FILE>
+
+<FILE Name="&img;/new_config.png">
+<URL>-q --no-check-certificate &url2;/plugin.images/new_config.png</URL>
+</FILE>
+
+<FILE Name="&img;/information.png">
+<URL>-q --no-check-certificate &url2;/plugin.images/information.png</URL>
+</FILE>
+
+<FILE Name="&plg;/putty-0.62-i486-1rj.txz" Run="upgradepkg --install-new">
+<URL>-q --no-check-certificate &url2;/packages.custom/putty-0.62-i486-1rj.txz</URL>
+</FILE>
+
+<FILE Name="&pkg;/openssh-5.9p1-i486-2_slack13.37.txz" Run="upgradepkg --install-new">
+<URL>-q --no-check-certificate &url3;/openssh-5.9p1-i486-2_slack13.37.txz</URL>
+</FILE>
+
+<FILE Name="/tmp/plugin-cleanup" Run="/bin/bash">
+<INLINE>
+# delete file but don't warn if file does not exist
+rmNoWarn() {
+  test -e $1 &amp;&amp; rm $1 2>/dev/null
+}
+
+# delete directory but don't warn if directory does not exist
+rmRecursiveNoWarn() {
+  test -e $1 &amp;&amp; rm -r $1 2>/dev/null
+}
+
+#Remove currently installed plugin files
+rmNoWarn /etc/rc.d/rc.ssh                            # control script
+rmNoWarn /var/run/ssh/ssh.pid                        # stale pid file
+rmRecursiveNoWarn /usr/local/emhttp/plugins/ssh      # unraid webgui integration files
+rmNoWarn /var/log/plugins/ssh                        # record of previous plugin installation
+
+rm /tmp/plugin-cleanup
+</INLINE>
+</FILE>
+
+<FILE Name="/boot/config/plugins/ssh/read_me.txt">
+<INLINE>
+<![CDATA[
+Create file called "authorized_keys" in this directory and paste into it the contents of a public key from a keypair
+
+To do this, you must have created a public and private key-pair.  Use the following steps to do this:
+
+From command line (telnet / putty)
+
+1. Type "ssh-keygen -t rsa -f /boot/config/plugins/ssh/<USERNAME>/.ssh/id_rsa"
+   NB.  replace "someuser" with the name of the user.
+   
+2. When prompted, type a passphrase if you wish for additional security for the private key.  Press enter if not for no passphrase
+
+3. Create a copy the public key into the same location and call it "authorized_keys".
+   eg.  cp /boot/config/plugins/ssh/<USERNAME>/.ssh/id_rsa.pub /boot/config/plugins/ssh/<USERNAME>/.ssh/authorized_keys
+   
+Verify everything has been created correctly.
+
+Upon restarting SSH, the plug-in will look for (and find) authorized_keys and copy this file to the users home directory.  eg.  /home/someuser/.ssh/authorized_keys
+
+----------------------------------------------------------
+
+The private part of the key is "id_rsa".  You must take this to the system you intend to connect *from*.  If you intend to use Putty to connect, then you *MUST* first convert the private key from standard OpenSSH format to Putty compatible format.
+
+A copy of PUTTYGEN for UnRAID has been included.  To convert the private key, follow these steps:
+
+From command line (telnet / putty):
+
+1. Type "puttygen /boot/config/plugins/ssh/<USERNAME>/.ssh/id_rsa -o /boot/config/plugins/ssh/<USERNAME>/.ssh/id_rsa.ppk
+2. In Putty, create an entry to your UnRAID server and in "Connection -> SSH -> Auth" section of Putty, browse for the file you created (id_rsa.ppk).
+
+Verify you are able to login successfully with the private key.
+]]>
+</INLINE>
+</FILE>
+
+<FILE Name="/boot/config/plugins/ssh/ssh.cfg">
+<INLINE>
+# ssh configuration
+SERVICE="disable"
+PORT="22"
+USERLIST="-1"
+PERMITROOTLOGIN="yes"
+MAXAUTHTRIES="6"
+PASSWORDAUTHENTICATION="yes"
+PERMITEMPTYPASSWORDS="yes"
+GATEWAYPORTS="no"
+</INLINE>
+</FILE>
+
+<FILE Name="/etc/rc.d/rc.ssh" Mode="0770">
+<INLINE>
+<![CDATA[
+#!/bin/bash
+# start|stop|restart|enable|disable|buttonstart|updateplg|getver ssh.
+
+ssh_start()
+{
+  # no-op if not enabled
+  if [ $SERVICE != "enable" ]; then
+    #echo "Service is not enabled!"
+    #sleep 1
+    return
+  fi
+   
+  # no-op if already running
+  if [ -f /var/run/sshd.pid ]; then
+    #echo "SSH already running"
+    #sleep 1
+    return
+  fi   
+   
+  echo "Starting SSH..."
+  sleep 1
+
+  /usr/sbin/sshd
+  
+  echo "... OK"
+  sleep 1
+}
+
+ssh_stop()
+{ 
+  # no-op if already running
+  if [ ! -f /var/run/sshd.pid ]; then
+    #echo "SSH already stopped"
+    #sleep 1
+    return
+  fi   
+
+  echo "Stopping SSH..."
+  sleep 1
+  
+  killall sshd
+  
+  echo "... OK"
+  sleep 1
+}
+  
+ssh_restart() {
+  if [ -r /var/run/sshd.pid ]; then
+    echo "Restarting parent listener process only. To kill every sshd process, you must use stop"
+    sleep 3
+    kill `cat /var/run/sshd.pid`
+  else
+    echo "Warning: there does not appear to be a parent instance of sshd running."
+    sleep 3
+    exit 1
+  fi
+  sleep 1
+  ssh_start
+}  
+
+ssh_buttonstart()
+{
+  CONFIG="/boot/config/plugins/ssh/ssh.cfg"
+  if [ -f $CONFIG ]; then
+    # a less greedy sed.  only replaces the first occurance of diabled with enabled.  ie. will only hit service line which is (usually) always first in cfg
+	sed -i "0,/"disable"/s/"disable"/"enable/"" $CONFIG 2>/dev/null
+    SERVICE=enable
+    
+    write_config
+    ssh_start
+    
+  fi
+}
+
+write_config()
+{
+  echo "Updating Config..."
+  sleep 1
+  
+  echo "# ssh configuration" > /boot/config/plugins/ssh/ssh.cfg
+  echo "SERVICE=\"$SERVICE\"" >> /boot/config/plugins/ssh/ssh.cfg
+  echo "PORT=\"$PORT\"" >> /boot/config/plugins/ssh/ssh.cfg
+  echo "USERLIST=\"$USERLIST\"" >> /boot/config/plugins/ssh/ssh.cfg
+  echo "PERMITROOTLOGIN=\"$PERMITROOTLOGIN\"" >> /boot/config/plugins/ssh/ssh.cfg
+  echo "MAXAUTHTRIES=\"$MAXAUTHTRIES\"" >> /boot/config/plugins/ssh/ssh.cfg
+  echo "PASSWORDAUTHENTICATION=\"$PASSWORDAUTHENTICATION\"" >> /boot/config/plugins/ssh/ssh.cfg
+  echo "PERMITEMPTYPASSWORDS=\"$PERMITEMPTYPASSWORDS\"" >> /boot/config/plugins/ssh/ssh.cfg
+  echo "GATEWAYPORTS=\"$GATEWAYPORTS\"" >> /boot/config/plugins/ssh/ssh.cfg
+  
+  # only loop thru userlist if some/one were selected in webgui.  no users selected = -1
+  if [[ $USERLIST != "-1" ]]; then
+    # Account for fact $USERLIST is one or many comma separated user names
+    USERLOOP=${USERLIST},
+    while echo $USERLOOP | grep \, &>/dev/null
+    do
+      USERTEMP=${USERLOOP%%\,*}
+      USERLOOP=${USERLOOP#*\,}
+      
+      #echo "Iterating through user: $USERTEMP"
+      
+      # Create home directory + .ssh subdirectoy and assign same + shell to user
+      if [ ! -d /home/$USERTEMP ]; then
+        #echo "Creating home dir: {/home/$USERTEMP} for $USERTEMP..."
+        mkdir -p /home/$USERTEMP/.ssh
+        chown -R $USERTEMP:users /home/$USERTEMP
+        chmod -R 0755 /home/$USERTEMP
+      fi
+      #echo "Assigning shell {/bin/bash} & home dir: {/home/$USERTEMP} to user $USERTEMP..."
+      usermod -d /home/$USERTEMP -s /bin/bash $USERTEMP 2>/dev/null
+
+      # Check for existance of "authorised_keys" file at /boot/config/plugin/ssh/{someuser}.  Copy to /home/{someuser} if found.  Enables
+      # user to authenticate with private / public key pair.
+      # NB: if file is not found, an empty directory path will be created on the flash drive, thus making it slightly easier for unraid user 
+      # to see what/where to maintain key files
+      # ** IT IS CURRENTLY THE USERS RESPONSIBILITY TO PRE-GENERATE A PUBLIC/PRIVATE KEYPAIR **
+      if [ -f /boot/config/plugins/ssh/$USERTEMP/.ssh/authorized_keys ]; then
+        cp --preserve=timestamps -p /boot/config/plugins/ssh/$USERTEMP/.ssh/authorized_keys /home/$USERTEMP/.ssh/authorized_keys
+        chmod 700 /home/$USERTEMP/.ssh
+        chmod 600 /home/$USERTEMP/.ssh/authorized_keys
+        chown $USERTEMP:users /home/$USERTEMP/.ssh/authorized_keys
+      else
+        mkdir -p /boot/config/plugins/ssh/$USERTEMP/.ssh 2>/dev/null
+        # put a lil help file in each user dir, saying what to do
+        cp /boot/config/plugins/ssh/read_me.txt /boot/config/plugins/ssh/$USERTEMP/.ssh/read_me.txt 2>/dev/null
+      fi
+    done
+  fi 
+  
+  # check if PermitRootLogin came thru as "YES", in which case check for authorized_keys file in plugin sub-dir.
+  if [[ $PERMITROOTLOGIN = "yes" ]]; then
+    [ ! -d /root/.ssh ] && mkdir /root/.ssh
+    if [ -f /boot/config/plugins/ssh/root/.ssh/authorized_keys ]; then
+	  cp --preserve=timestamps -p /boot/config/plugins/ssh/root/.ssh/authorized_keys /root/.ssh/authorized_keys
+      chmod 700 /root/.ssh
+      chmod 600 /root/.ssh/authorized_keys
+      chown root:root /root/.ssh/authorized_keys  
+	fi  
+  fi
+ 
+  # the host keys get created during plugin install script and if not present are generated
+  # using ssh-keygen and copied to flash to persist reboot.  we already know they're present
+  # at /boot/config/plugins/ssh so just copy them over to /etc/ssh and set correct perms
+  # this is a global setting, not user specific, so do it regardless if sshuser empty or not
+  # this way it will allow root to login via ssh as long as PermitRootLogin=yes and either
+  # root has been assigned a password or if no password then AllowEmptyPaswords must = yes
+  cp --preserve=timestamps -p /boot/config/plugins/ssh/ssh_host_*key* /etc/ssh
+  chmod 600 /etc/ssh/ssh_host_*key
+  chmod 644 /etc/ssh/ssh*.pub
+
+  # do the same for sshd_config and ssh_config.  allows users to manually edit sshd_config on the flash drive in case additional config needed.
+  cp --preserve=timestamps -p -f /boot/config/plugins/ssh/sshd_config /etc/ssh/sshd_config
+  cp --preserve=timestamps -p -f /boot/config/plugins/ssh/ssh_config /etc/ssh/ssh_config
+  
+  # update sshd_config file with values set in webgui
+  sed -i 's/.*Port .*/Port '$PORT'/' /etc/ssh/sshd_config
+  sed -i 's/.*PermitRootLogin.*/PermitRootLogin '$PERMITROOTLOGIN'/' /etc/ssh/sshd_config
+  sed -i 's/.*MaxAuthTries.*/MaxAuthTries '$MAXAUTHTRIES'/' /etc/ssh/sshd_config
+  sed -i 's/.*PasswordAuthentication.*/PasswordAuthentication '$PASSWORDAUTHENTICATION'/' /etc/ssh/sshd_config
+  sed -i 's/.*PermitEmptyPasswords.*/PermitEmptyPasswords '$PERMITEMPTYPASSWORDS'/' /etc/ssh/sshd_config
+  sed -i 's/.*GatewayPorts.*/GatewayPorts '$GATEWAYPORTS'/' /etc/ssh/sshd_config
+
+  echo "... OK"
+  sleep 1
+}
+
+ssh_enable()
+{
+  echo "Applying Settings ($1) ..."
+  sleep 1
+  
+  SERVICE="$1" #enable
+  PORT="$2"
+  USERLIST="$3"
+  PERMITROOTLOGIN="$4"
+  MAXAUTHTRIES="$5"
+  PASSWORDAUTHENTICATION="$6"
+  PERMITEMPTYPASSWORDS="$7"
+  GATEWAYPORTS="$8"
+  
+  write_config
+  ssh_start
+   
+  echo "... OK"
+  sleep 1
+}
+
+ssh_disable()
+{
+  echo "Applying Settings ($1) ..."
+  sleep 1
+  
+  SERVICE="$1" #disable
+  PORT="$2"
+  USERLIST="$3"
+  PERMITROOTLOGIN="$4"
+  MAXAUTHTRIES="$5"
+  PASSWORDAUTHENTICATION="$6"
+  PERMITEMPTYPASSWORDS="$7"
+  GATEWAYPORTS="$8"
+  
+  write_config
+  ssh_stop
+  
+  echo "... OK"
+  sleep 1
+}
+
+ssh_updateplg()
+{
+  if [ -f /boot/config/plugins/openssh_overbyrn.plg ]; then
+    ssh_stop;
+    echo "Downloading plugin..."
+    wget -q -P /tmp --no-check-certificate https://raw.github.com/overbyrn/UnRAID/master/openssh_overbyrn.plg 2>/dev/null
+    if [ ! -f /tmp/openssh_overbyrn.plg ]; then
+      echo "Download failed, update aborted!"
+      sleep 2
+    else
+      echo "...OK"
+      sleep 1
+      echo  "Upgrading plugin..."
+      sleep 1
+      mv -f /boot/config/plugins/openssh_overbyrn.plg /boot/config/plugins/ssh/openssh_overbyrn.plg.sav 2>/dev/null
+      mv -f /tmp/openssh_overbyrn.plg /boot/config/plugins/openssh_overbyrn.plg 2>/dev/null
+      /usr/local/sbin/installplg /boot/config/plugins/openssh_overbyrn.plg 2>/dev/null
+      echo "...OK"
+      sleep 1
+    fi
+    ssh_start;
+  fi
+}
+
+ssh_plgver()
+{
+  case "$1" in
+    'local')
+      if [ -f /boot/config/plugins/openssh_overbyrn.plg ]; then
+        VERSION=$(grep "<\!ENTITY plgver" /boot/config/plugins/openssh_overbyrn.plg | cut -d\" -f2)
+	  else
+	    VERSION=Unknown
+	  fi
+    ;;
+    'remote')
+      VERSION=$(wget --no-check-certificate -q https://raw.github.com/overbyrn/UnRAID/master/openssh_overbyrn.plg -O - | grep "<\!ENTITY plgver" | cut -d\" -f2)
+      if [ "$VERSION" == "" ]; then
+        VERSION=Unknown
+      fi
+    ;;
+  esac
+  # nb: remember to use -n to remove CRLF as otherwise php var needs TRIM on the shell_exec line
+  echo -n "$VERSION"
+}
+
+ssh_appver()
+{
+  case "$1" in
+    'local')
+      VERSION=$(/usr/bin/ssh -V 2>&1)
+      #note to self, ssh reports version to stderr.  so redirect stderr (2) to stdout (1)
+    ;;
+    'remote')
+      #APPVER=$(wget --no-check-certificate https://dl.dropbox.com/u/572553/UnRAID/plugin.version.control/ssh_appver.txt -q -O - |sed 's/_/-/g')
+      #VERSION=$(echo $APPVER|awk -F- '{print $3"-"$2"-"$4}') 
+      #currently not in used for this plugin.
+      VERSION=$(/usr/bin/ssh -V)
+      if [ "$VERSION" == "" ]; then
+        VERSION=Unknown
+      fi
+    ;;
+  esac
+  echo -n "$VERSION"
+}
+
+ssh_getver()
+{
+  if [[ ! -z $1 && ! -z $2 ]]; then
+  case "$1" in
+    'plg')
+      ssh_plgver $2
+    ;;
+    'app')
+      ssh_appver $2
+    ;;
+  esac
+  else
+    echo "usage $0 getver plg|app local|remote"
+  fi
+}
+
+ssh_commithist()
+{
+  # use the GitHub API to retrieve the commit history for file passed as argument to this function
+  # this is done in two phases;
+  # 1. obtain the SHA hash for the most recent commit of the given file
+  # 2. construct URL which will present a consolidated list of commits from most recent to oldest for given file
+  if [ ! -z "$1" ]; then
+    LAST_SHA=$(wget --no-check-certificate -q https://api.github.com/repos/overbyrn/UnRAID/commits?path=$1 -O - | grep -Pom 1 '"sha":.*?[^\\]",' | sed 's/[\",]//g' | cut -d' ' -f2)
+    if [ ! -z "$LAST_SHA" ]; then
+      COMMIT_URL=https://github.com/overbyrn/UnRAID/commits/$LAST_SHA/$1
+      #echo "LAST_SHA = $LAST_SHA"
+      #echo "COMMIT_URL = $COMMIT_URL"
+      echo -n "$COMMIT_URL"
+    else
+      echo -n "URL could not be retrieved"
+    fi
+  else
+    echo "Error: function expects name of file to be passed as parameter"
+  fi
+}
+
+# read our configuration
+source /boot/config/plugins/ssh/ssh.cfg
+
+case "$1" in
+  'start')
+    ssh_start
+  ;;
+  'stop')
+    ssh_stop
+  ;;
+  'restart')
+    ssh_restart
+  ;;
+  'enable')
+    # note to self: Q: how to handle more than 10 arguments passed to a shell, A: Address as ${x}
+    #echo "[p1 = $1] [p2 = $2] [p3 = $3] [p4 = $4] [p5 = $5] [p6 = $6] [p7 = $7] [p8 = $8]"
+    #sleep 5
+    ssh_enable $1 $2 $3 $4 $5 $6 $7 $8
+  ;;
+  'disable')
+    #echo "[p1 = $1] [p2 = $2] [p3 = $3] [p4 = $4] [p5 = $5] [p6 = $6] [p7 = $7] [p8 = $8]"
+    #sleep 5
+    ssh_disable $1 $2 $3 $4 $5 $6 $7 $8
+  ;;
+  'buttonstart')
+    ssh_buttonstart
+  ;;
+  'updateplg')
+    ssh_updateplg
+  ;;
+  'getver')
+    ssh_getver $2 $3
+    ;;  
+  'commithist')
+    ssh_commithist $2
+    ;;  
+  *)
+    echo "usage $0 start|stop|restart|enable|disable|buttonstart|updateplg|getver|commiturl [argv0]"
+esac
+]]>
+</INLINE>
+</FILE>
+
+<FILE Name="/usr/local/emhttp/plugins/ssh/ssh.png">
+<LOCAL>/boot/config/plugins/ssh/ssh.png</LOCAL>
+</FILE>
+
+<FILE Name="/usr/local/emhttp/plugins/ssh/device_status.png">
+<LOCAL>/boot/config/plugins/images/device_status.png</LOCAL>
+</FILE>
+
+<FILE Name="/usr/local/emhttp/plugins/ssh/new_config.png">
+<LOCAL>/boot/config/plugins/images/new_config.png</LOCAL>
+</FILE>
+
+<FILE Name="/usr/local/emhttp/plugins/ssh/information.png">
+<LOCAL>/boot/config/plugins/images/information.png</LOCAL>
+</FILE>
+
+<FILE Name="/usr/local/emhttp/plugins/ssh/ssh.php">
+<INLINE>
+<![CDATA[
+<?PHP
+$ssh_cfg = parse_ini_file( "/boot/config/plugins/ssh/ssh.cfg");
+$ssh_localplg = shell_exec("/etc/rc.d/rc.ssh getver plg local");
+$ssh_remoteplg = shell_exec("/etc/rc.d/rc.ssh getver plg remote");
+$ssh_localapp = shell_exec("/etc/rc.d/rc.ssh getver app local");
+$ssh_running = file_exists( "/var/run/sshd.pid") ? "yes" : "no";
+$controls_exist = "false";
+$updates_exist = "false";
+$ssh_commithist = shell_exec ( "/etc/rc.d/rc.ssh commithist openssh_overbyrn.plg" );
+//create array of users from passwd file where their UID is greater than or equal to 1000.  ie. assumed to be non-system users
+$useropts = array();
+$command = "awk -F':' '{ if($3 >= 1000) print $1 }' /etc/passwd";
+exec($command, &$useropts);
+//create array of users from cfg file. explode handles comma separated in case of multi values
+$selectedsshusers  = explode(',', $ssh_cfg['USERLIST']);
+?>
+
+<html>
+<head></head>
+<body>
+
+<div style="width: 49%; float:left; border: 0px solid black;">
+  <div id="title">
+    <span class="left">Status:&nbsp;<img src='/plugins/ssh/device_status.png'>
+      <?if ($ssh_running=="yes"):?>
+        <span class="green"><b>SSH is RUNNING</b></span>
+      <?else:?>
+        <span class="red"><b>SSH is NOT RUNNING</b></span>
+      <?endif;?>
+    </span>
+  </div>
+  
+  <div style="border: 0px solid black;">
+    <span class="left">
+      <p>
+        OpenSSH Version: <span class="green-text"><b><?=$ssh_localapp?></b></span>
+      </p>
+	</span>
+  </div>
+
+  <br></br>
+  
+  <div style="border: 0px solid black;">
+    <table>
+      <tr style="font-weight:bold; color:#333333; background:#F0F0F0; text-shadow:0 1px 1px #FFFFFF;">
+        <td>Plugin</td>
+        <td>Local Version</td>
+        <td>Online Version</td>
+      </tr>
+      <tr style="font-weight:bold; background:#FFFFFF;">
+        <td>SSH Plugin</td>
+        <td>
+          <?if ($ssh_localplg != "Unknown"):?>
+              <span class="green-text"><?=$ssh_localplg?></span>
+          <?else:?>
+            <span class="red-text">UNKNOWN</span>
+          <?endif;?>
+        </td>
+        <td>
+          <?if ($ssh_remoteplg != "Unknown"):?>
+            <?if ($ssh_commithist == "URL could not be retrieved"):?>  <!-- we didnt obtain the commit history for some reason, so just display the version -->
+              <span class="green-text"><?=$ssh_remoteplg?></span>
+            <?else:?>
+              <span class="green-text">
+                <?=$ssh_remoteplg?>
+                <a href="<?=$ssh_commithist?>" style="color: green; text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'" title="See GitHub Commit History" target="_blank">
+                  <span class="green">
+                    <b>[Change Log]</b>
+                  </span>
+                </a>
+              </span>
+            <?endif;?> 
+          <?else:?>
+            <span class="red-text">UNKNOWN</span>
+          <?endif;?>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <br></br>
+
+  <div>
+    <table>
+      <tr style="font-weight:bold; color:#333333; background:#F0F0F0; text-shadow:0 1px 1px #FFFFFF;">
+        <td colspan="2">Control Actions</td>
+      </tr>
+
+      <?if ($ssh_running=="yes"):?>
+        <tr>
+        <td width="30%">
+          <form name="ssh_start_stop" method="POST" action="/update.htm" target="progressFrame">
+            <input type="hidden" name="cmd" value="/etc/rc.d/rc.ssh stop">
+            <input type="submit" name="runCmd" value="Stop">
+          </form>
+        </td>
+        <td>Stop SSH Daemon</td>
+        </tr>
+        <tr>
+        <td width="30%">
+          <form name="ssh_restart" method="POST" action="/update.htm" target="progressFrame">
+            <input type="hidden" name="cmd" value="/etc/rc.d/rc.ssh restart">
+            <input type="submit" name="runCmd" value="Restart">
+          </form>
+        </td>
+        <td>Restart SSH Daemon</td>
+        </tr>
+        <?$controls_exist = "true"?>
+      <?else:?>
+        <tr>
+        <td width="30%">
+          <form name="ssh_start" method="POST" action="/update.htm" target="progressFrame">
+            <input type="hidden" name="cmd" value="/etc/rc.d/rc.ssh buttonstart">
+            <input type="submit" name="runCmd" value="Start">
+          </form>
+        </td>
+        <td>Start SSH Daemon</td>
+        </tr>
+        <?$controls_exist = "true"?>
+      <?endif;?>
+      <?if ($controls_exist=="false"):?>
+        <tr>
+          <td colspan="2" align="center">No Control Actions available</td>
+        </tr>
+      <?endif;?>
+    </table>
+  </div>
+  <br></br>
+  <div style="border: 0px solid black;">
+    <table>
+      <tr style="font-weight:bold; color:#333333; background:#F0F0F0; text-shadow:0 1px 1px #FFFFFF;">
+        <td colspan="2">Updates</td>
+      </tr>
+      <?if (($ssh_remoteplg != $ssh_localplg) && ($ssh_localplg != "Unknown") && ($ssh_remoteplg != "Unknown")): ?>
+        <tr>
+        <td width="30%">
+          <form name="ssh_updateplg" method="POST" action="/update.htm" target="progressFrame">
+            <input type="hidden" name="cmd" value="/etc/rc.d/rc.ssh updateplg">
+            <input type="submit" name="runCmd" value="Update Plugin">
+          </form>
+        </td>
+        <td><span class="red-text">An update is available to the plugin</span></td>
+        </tr>
+        <?$updates_exist="true"?>
+      <?endif;?>
+
+      <?if ($updates_exist=="false"):?>
+        <tr>
+          <td colspan="2" align="center">No updates available at this time</td>
+        </tr>
+      <?endif;?>
+    </table>
+  </div>
+  <br></br>
+  <br></br>
+</div>
+
+<div style="width: 49%; float:right; border: 0px solid black;">
+  <div id="title">
+    <span class="left">Configuration:&nbsp;<img src='/plugins/ssh/new_config.png'></span>
+  </div>
+  <form name="ssh_settings" id="ssh_settings" method="POST" action="/update.htm" target="progressFrame" onsubmit="return validateForm();">
+  <!--note to self: the /return/ in the onsubmit event is important as without it, the submit action is still processed-->
+    <input type="hidden" name="cmd" value="/etc/rc.d/rc.ssh">
+    <input type="hidden" name="arg3" id="arg3" maxlength="60" value="wibble">
+ 
+    <table class="settings">
+      <tr>
+      <td>Enable SSH Service:</td>
+      <td>
+        <select name="arg1" id="arg1" size="1">
+          <?=mk_option($ssh_cfg['SERVICE'], "disable", "No");?>
+          <?=mk_option($ssh_cfg['SERVICE'], "enable", "Yes");?>
+        </select>
+      </td>
+      </tr>
+      <tr>
+      <td>SSH Port:</td>
+      <td>
+        <input type="text" name="arg2" id="arg2" maxlength="5" style="width: 20%;height: 100%;" value="<?=$ssh_cfg['PORT'];?>">
+      </td>
+      </tr>
+      <tr>
+      <td>Available options for SSH Users:</td>
+      <td>
+        <select name="sshusers" id="sshusers" multiple="multiple" size="4" style="width: 50%;height: 100%;">
+          <? foreach ($useropts as $users) { ?>
+          <option <? print (in_array($users,$selectedsshusers)) ? "selected" : "" ; ?> value="<?=$users;?>">
+          <? print $users; ?>
+          </option>
+          <? } ?>
+        </select>
+      </td>
+      </tr>
+      <tr>
+      <td>Permit Root Login:</td>
+      <td>
+        <select name="arg4" id="arg4" size="1">
+          <?=mk_option($ssh_cfg['PERMITROOTLOGIN'], "yes", "Yes");?>
+          <?=mk_option($ssh_cfg['PERMITROOTLOGIN'], "no", "No");?>
+        </select>
+      </td>
+      </tr>
+      <tr>
+      <td>Max Auth Retries:</td>
+      <td>
+        <input type="text" name="arg5" id="arg5" maxlength="5" value="<?=$ssh_cfg['MAXAUTHTRIES'];?>">
+      </td>
+      </tr>
+      <tr>
+      <td>Password Authentication:</td>
+      <td>
+        <select name="arg6" id="arg6" size="1">
+          <?=mk_option($ssh_cfg['PASSWORDAUTHENTICATION'], "yes", "Yes");?>
+          <?=mk_option($ssh_cfg['PASSWORDAUTHENTICATION'], "no", "No");?>
+        </select>
+      </td>
+      </tr>
+      <tr>
+      <td>Permit Empty Passwords:</td>
+      <td>
+        <select name="arg7" id="arg7" size="1">
+          <?=mk_option($ssh_cfg['PERMITEMPTYPASSWORDS'], "yes", "Yes");?>
+          <?=mk_option($ssh_cfg['PERMITEMPTYPASSWORDS'], "no", "No");?>
+        </select>
+      </td>
+      </tr>
+      <tr>
+      <td>Gateway Ports:</td>
+      <td>
+        <select name="arg8" id="arg8" size="1">
+          <?=mk_option($ssh_cfg['GATEWAYPORTS'], "yes", "Yes");?>
+          <?=mk_option($ssh_cfg['GATEWAYPORTS'], "no", "No");?>
+        </select>
+      </td>
+      </tr>
+      <tr>
+    </table>
+
+    <div align="center">
+      <hr size="3" align="center" width="75%" color="grey" style="margin-top:20px;margin-bottom:18px">
+      <input type="submit" name="runCmd" value="Apply"><button type="button" onClick="done();">Done</button>      
+    </div>
+  </form>
+  <br></br>
+  <br></br>
+</div>
+
+<script type="text/javascript">
+function onLoad() {
+  // do nothing
+}
+
+function validateForm() {
+  // create comma separated list of users.  empty value if no users selected
+  var sshuserVal = "";
+  var x = 0;
+  for (x = 0; x < document.getElementById('sshusers').length; x++) {
+    if (document.getElementById('sshusers')[x].selected) {
+      sshuserVal = sshuserVal + document.getElementById('sshusers')[x].value + "," ;
+      }
+    }
+  document.getElementById('arg3').value = sshuserVal.replace(/(^\s*,)|(,\s*$)/g, '');  // strip off trailing comma
+  if (document.getElementById('arg3').value == "") {
+	document.getElementById('arg3').value = "-1"
+  }
+  
+  document.getElementById('arg2').disabled = false;
+  document.getElementById('arg3').disabled = false;
+  document.getElementById('arg4').disabled = false;
+  document.getElementById('arg5').disabled = false;
+  document.getElementById('arg6').disabled = false;
+  document.getElementById('arg7').disabled = false;
+  document.getElementById('arg8').disabled = false;
+  return(true);
+}
+
+function checkRUNNING(form) {
+    // dont disable arg1 which is the service enable/disable. only disable subsequent fields
+    // note: "disabled" elements do not get submitted. the below will cause these field values to be empty upon apply. a workaround is to 
+    //       implement a validation function which is called upon form submit which amongst other things can re-enable the fields
+    if ("<?=$ssh_running;?>" == "yes") {
+    form.arg2.disabled = true;
+    form.arg3.disabled = true;
+    form.arg4.disabled = true;
+    form.arg5.disabled = true;
+    form.arg6.disabled = true;
+    form.arg7.disabled = true;
+    form.arg8.disabled = true;
+  }
+}
+
+onLoad();
+checkRUNNING(document.ssh_settings);
+</script>
+</body>
+</html>
+]]>
+</INLINE>
+</FILE>
+
+<FILE Name="/tmp/plugin-install" Run="/bin/bash">
+<INLINE>
+# create lastlog file
+if [ ! -f /var/log/lastlog ]; then
+  touch /var/log/lastlog 2>/dev/null
+  chmod 644 /var/log/lastlog 2>/dev/null
+fi
+
+# create dir in plugin for root. enables user to add public key prior to starting plugin for first time
+if [ ! -d &plg;/root ]; then
+  mkdir -p &plg;/root/.ssh 2>/dev/null
+  cp &plg;/read_me.txt &plg;/root/.ssh/read_me.txt 2>/dev/null
+fi
+
+# create key files in plugin dir if this is first time plugin has ever been run
+if [ ! -r &plg;/ssh_host_key ]; then
+  /usr/bin/ssh-keygen -t rsa1 -f &plg;/ssh_host_key -N ''
+fi
+if [ ! -f &plg;/ssh_host_dsa_key ]; then
+  /usr/bin/ssh-keygen -t dsa -f &plg;/ssh_host_dsa_key -N ''
+fi
+if [ ! -f &plg;/ssh_host_rsa_key ]; then
+  /usr/bin/ssh-keygen -t rsa -f &plg;/ssh_host_rsa_key -N ''
+fi
+if [ ! -f &plg;/ssh_host_ecdsa_key ]; then
+  /usr/bin/ssh-keygen -t ecdsa -f &plg;/ssh_host_ecdsa_key -N ''
+fi
+if [ ! -r &plg;/sshd_config ]; then
+  cp /etc/ssh/sshd_config &plg;/sshd_config
+fi
+if [ ! -r &plg;/ssh_config ]; then
+  cp /etc/ssh/ssh_config &plg;/ssh_config
+fi
+
+# include our config vars and check if the service is set to enable.  if so, bring it up
+source /boot/config/plugins/ssh/ssh.cfg
+[[ $SERVICE = "enable" ]] &amp;&amp; /etc/rc.d/rc.ssh buttonstart
+
+rm /tmp/plugin-install
+</INLINE>
+</FILE>
+
+<FILE Name="/usr/local/emhttp/plugins/ssh/ssh.page">
+<INLINE>
+Menu="NetworkServices"
+Icon="ssh.png"
+Version="&plgver;"
+Author="&author;"
+Type="php"
+Title="&plugin;"
+</INLINE>
+</FILE>
+
+<FILE Name="/var/log/plugins/ssh">
+<INLINE>
+&plugin; v&plgver;
+</INLINE>
+</FILE>
+
+<FILE Name="/tmp/plugin-development" Run="/bin/bash">
+<INLINE>
+if [ "&dev;" == "true" ]; then
+  if [ -f /boot/config/plugins/ssh.php ]; then
+    rm -f &gui;/ssh/ssh.php
+    ln -s /boot/config/plugins/ssh.php &gui;/ssh/ssh.php
+  else
+    mv &gui;/ssh/ssh.php /boot/config/plugins/ssh.php
+    ln -s /boot/config/plugins/ssh.php &gui;/ssh/ssh.php
+  fi
+  if [ -f /boot/config/plugins/rc.ssh ]; then
+    rm -f /etc/rc.d/rc.ssh
+    ln -s /boot/config/plugins/rc.ssh /etc/rc.d/rc.ssh
+  else
+    mv /etc/rc.d/rc.ssh /boot/config/plugins/rc.ssh
+    ln -s /boot/config/plugins/rc.ssh /etc/rc.d/rc.ssh
+  fi
+fi
+
+rm /tmp/plugin-development
+</INLINE>
+</FILE>
+
+</PLUGIN>

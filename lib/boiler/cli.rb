@@ -24,7 +24,7 @@ module Boiler
       status "Packing #{name}"
 
       package = Package.new dir
-      name = package.file_name
+      name = package.build
 
       pkg = "#{Dir.pwd}/#{name}"
       status "Done! Your package is at #{pkg}", :green
@@ -59,7 +59,8 @@ module Boiler
       end
 
       status "Packaging #{repo.last}"
-      packed_name = create_package repo.first.dir.to_s
+      pkg = Package.new repo.first.dir.to_s
+      packed_name = pkg.build
 
       if unraid?
         FileUtils.mkdir_p '/boot/extra'

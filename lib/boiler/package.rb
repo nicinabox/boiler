@@ -23,13 +23,15 @@ module Boiler
       @destination_stack = [@tmp]
     end
 
-    def make_package
+    def build
       copy_files_to_tmp
       setup_env
       setup_post_install
       run_tasks
       prefix_files
       archive
+
+      file_name
     end
 
     def copy_files_to_tmp

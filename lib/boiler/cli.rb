@@ -210,6 +210,7 @@ module Boiler
       status 'Removing old package'
       FileUtils.rm Dir.glob("/boot/extra/#{name}*")
 
+      remove name
       install name, version
     end
 

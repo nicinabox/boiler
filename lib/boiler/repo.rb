@@ -34,11 +34,11 @@ module Boiler
   private
 
     def set_name_and_url(name, url)
-      if url? name
-        @name = File.basename name
-        @url  = name
-      else
+      if name
         @name = name
+        @url  = url
+      else
+        @name = File.basename(url).gsub(/\.git$/, '')
         @url  = url
       end
     end

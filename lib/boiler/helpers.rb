@@ -1,4 +1,3 @@
-require 'git'
 require 'httparty'
 require 'fileutils'
 require 'deep_merge'
@@ -27,41 +26,9 @@ module Boiler
       %w(name version)
     end
 
-    def clone_repo(name, url, version=nil)
-      dest = tmp_repo(name)
-
-      # Remove that directory before we create it
-      FileUtils.rm_rf dest
-      FileUtils.mkdir_p tmp_boiler
-
-      repo = Git.clone(url, name, :path => tmp_boiler)
-      tags = repo.lib.tags.sort {|x, y| Gem::Version.new(x) <=> Gem::Version.new(y) }
-      repo.checkout (version ||= tags.last || 'master')
-      [repo, version]
-    end
-
     def installed_packages(name)
       wildcard = name ? "#{name}" : "**"
       Dir.glob("/var/log/boiler/#{wildcard}/boiler.json")
-    end
-
-    def public_repo?(url)
-      true if `git ls-remote #{url}`.include? 'master'
-    end
-
-    def git_protocol?(url)
-      true if /^git:\/\// =~ url
-    end
-
-    def convert_to_git_protocol(url)
-      git_url = url.gsub(/(git@|https:\/\/)/, 'git://')
-      if git_protocol? git_url
-        git_url
-      end
-    end
-
-    def manifest_exists?(dest)
-      true if File.exists? manifest(dest)
     end
 
     def manifest(dest)

@@ -105,23 +105,6 @@ module Boiler
 
       config
     end
-
-    def check_for_update
-      if Boiler::VERSION < remote_version
-        status "A newer version is available.", :green
-        response = ask "Would you like to update now?", default: 'y'
-        if response != 'n'
-          status "Updating"
-          update('boiler')
-        end
-      end
-    end
-
-    def remote_version
-      response = HTTParty.get('https://api.github.com/repos/nicinabox/boiler/tags',
-                              :headers => { 'User-Agent' => 'boiler' })
-      response.first['name']
-    end
   end
 end
 

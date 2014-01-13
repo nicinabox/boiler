@@ -3,6 +3,7 @@ require 'bundler'
 require 'boiler/helpers'
 require 'boiler/package'
 require 'boiler/convert_plg'
+require 'boiler/updater'
 require 'boiler/version'
 
 module Boiler
@@ -15,7 +16,8 @@ module Boiler
 
     def initialize(*args)
       super
-      check_for_update
+      updater = Updater.new
+      updater.check if unraid?
     end
 
     desc 'pack DIR', 'Pack a directory for distribution'

@@ -1,6 +1,6 @@
 {
   "name": "boiler",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "The missing package manager for unRAID",
   "authors": [
     "Nic Aitch <nic@nicinabox.com>"

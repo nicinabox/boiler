@@ -99,16 +99,9 @@ See this project's boiler.json for a working example.
 
 ## Todo
 
-* Tests
-* Robustness on install (thin dependencies if possible)
-* Better error reporting when something fails
 * Convert plgs more accurately
-* Version string appears 3 times in repo :/
-* Add info on testing your package with a vm
 * Setup as gem? Useful for development (convert, pack)
-* boiler.json
-  * dependencies: supports urls and version
-  * peerDependencies: same as dependencies, but for boiler packages
+* Refactor helpers, updater, register
 
 ## Contributing
 

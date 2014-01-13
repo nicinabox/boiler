@@ -1,7 +1,7 @@
 {
   "name": "boiler",
   "version": "0.3.0",
-  "description": "Plugin packaging and distribution for unRAID",
+  "description": "The missing package manager for unRAID",
   "authors": [
     "Nic Aitch <nic@nicinabox.com>"
   ],

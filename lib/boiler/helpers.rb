@@ -27,7 +27,7 @@ module Boiler
     end
 
     def installed_packages(name)
-      wildcard = name ? "#{name}" : "**"
+      wildcard = name ? "#{name}*" : "**"
       Dir.glob("/var/log/boiler/#{wildcard}/boiler.json")
     end
 

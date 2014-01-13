@@ -1,9 +1,8 @@
-require 'boiler/helpers'
+require 'boiler/base'
 
 module Boiler
-  class Updater
+  class Updater < Base
     include Thor::Base
-    include Boiler::Helpers
 
     def check
       if update_available?

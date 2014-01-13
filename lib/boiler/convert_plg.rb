@@ -1,10 +1,9 @@
-require 'boiler/helpers'
+require 'boiler/base'
 
 module Boiler
-  class ConvertPlg
+  class ConvertPlg < Base
     include Thor::Base
     include Thor::Actions
-    include Boiler::Helpers
     source_root Dir.pwd
 
     attr_accessor :file, :base_file_name, :xml, :tmp, :config,

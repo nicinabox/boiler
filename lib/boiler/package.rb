@@ -1,10 +1,9 @@
-require 'boiler/helpers'
+require 'boiler/base'
 
 module Boiler
-  class Package
+  class Package < Base
     include Thor::Base
     include Thor::Actions
-    include Boiler::Helpers
     source_root Dir.pwd
 
     attr_accessor :config, :tmp, :src, :name_to_param,
@@ -165,7 +164,7 @@ module Boiler
     def archive
       cwd = Dir.pwd
 
-      if unraid?
+      if self.class.unraid?
         `cd #{tmp} && makepkg -c y ../#{target_file_name}.tgz`
       else
         `cd #{tmp} && tar -czf ../#{target_file_name}.tgz .`

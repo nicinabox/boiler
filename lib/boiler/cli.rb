@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'bundler'
+require 'boiler/base'
 require 'boiler/helpers'
 require 'boiler/package'
 require 'boiler/convert_plg'
@@ -9,7 +10,6 @@ require 'boiler/version'
 module Boiler
   class CLI < Thor
     include HTTParty
-    include Boiler::Helpers
 
     base_uri 'http://boiler-registry.herokuapp.com'
     format :json
@@ -17,7 +17,7 @@ module Boiler
     def initialize(*args)
       super
       updater = Updater.new
-      updater.check if unraid?
+      updater.check if Boiler::Base.unraid?
     end
 
     desc 'pack DIR', 'Pack a directory for distribution'
@@ -65,7 +65,7 @@ module Boiler
       pkg = Package.new repo.first.dir.to_s
       packed_name = pkg.build
 
-      if unraid?
+      if Boiler::Base.unraid?
         FileUtils.mkdir_p '/boot/extra'
         FileUtils.mv "#{packed_name}", '/boot/extra'
 
@@ -80,7 +80,7 @@ module Boiler
 
     desc 'remove NAME', 'Remove (uninstall) a package'
     def remove(name)
-      if unraid?
+      if Boiler::Base.unraid?
         `removepkg #{name}`
       end
     end

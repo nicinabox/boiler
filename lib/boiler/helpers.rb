@@ -15,11 +15,6 @@ module Boiler
       string.downcase.gsub(' ', '-')
     end
 
-    def unraid?
-      /unraid/i =~ `uname -a`.strip
-    end
-    module_function :unraid?
-
     def tmp_boiler
       "/tmp/boiler"
     end
@@ -107,14 +102,3 @@ module Boiler
     end
   end
 end
-
-if Boiler::Helpers.unraid?
-  pwd = Dir.pwd
-  Dir.chdir File.expand_path('../..', __FILE__)
-  Bundler.setup(:default)
-  Dir.chdir pwd
-else
-  Bundler.setup(:default)
-end
-
-require 'thor'

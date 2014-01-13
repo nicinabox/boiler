@@ -48,29 +48,31 @@ module Boiler
     end
 
     desc 'install NAME [VERSION]', 'Install a package by name'
-    def install(name_or_url, version=nil)
+    def install(name, version=nil)
       status "Downloading #{name_or_url}"
 
-      if url? name_or_url
-        url = name_or_url
-        package = self.class.get(url)
-        repo = clone_repo(`basename #{url}`, url, version)
+      if url? name
+        url  = name
+        name = nil
       else
-        name = name_or_url
-        package = self.class.get("/packages/#{name}?install=true")
-        repo = clone_repo(package['name'], package['url'], version)
+        pkg_data = self.class.get("/packages/#{name}?install=true")
+        url      = pkg_data['url']
       end
 
-      status "Packaging #{repo.last}"
-      pkg = Package.new repo.first.dir.to_s
-      packed_name = pkg.build
+      repo    = Repo.new url, name, version
+      base    = repo.clone
+      version = repo.release
+
+      status "Packaging #{repo.name}"
+      package   = Package.new repo.working_directory
+      file_name = package.build
 
       if Boiler::Base.unraid?
         FileUtils.mkdir_p '/boot/extra'
-        FileUtils.mv "#{packed_name}", '/boot/extra'
+        FileUtils.mv "#{file_name}", '/boot/extra'
 
         status "Installing"
-        puts `installpkg /boot/extra/#{packed_name}`
+        puts `installpkg /boot/extra/#{file_name}`
 
         status 'Installed!', :green
       else

@@ -14,9 +14,14 @@ describe Boiler::CLI do
 
   describe '#pack' do
     it 'packages a directory' do
-      pending
-      dir = create_package('boiler-hello')
-      out = capture(:stdout) { cli.pack dir }
+      dir = '/home/test/valid-package'
+      path = ''
+      FileUtils.mkdir_p dir
+      FakeFS::FileSystem.clone("spec/support/valid-package", dir)
+      Boiler::Package.any_instance.stub(:archive)
+
+      out = capture(:stdout) { path = cli.pack(dir) }
+      path.should == 'valid-package-0.1.0-noarch-unraid.tgz'
     end
   end
 

@@ -27,16 +27,15 @@ module Boiler
 
     desc 'pack DIR', 'Pack a directory for distribution'
     def pack(dir)
-      file_name = File.basename(File.expand_path(dir))
+      name = File.basename(File.expand_path(dir))
 
-      status "Packing #{file_name}"
+      status "Packing #{name}"
 
-      package = Package.new dir
-      name = package.build
+      package      = Package.new dir
+      package_path = package.build
 
-      path = "#{Dir.pwd}/#{name}"
-      status "Done! Your package is at #{path}", :green
-      path
+      status "Done! Your package is at #{package_path}", :green
+      package_path
     end
 
     desc 'deploy DIR HOST', 'Pack and copy to an unRAID machine (for testing)'

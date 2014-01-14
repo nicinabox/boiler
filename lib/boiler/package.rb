@@ -8,7 +8,7 @@ module Boiler
     source_root Dir.pwd
 
     attr_accessor :config, :tmp, :src, :name_to_param,
-                  :manifest
+                  :manifest, :package_path
 
     def initialize(dir)
       @src              = File.expand_path dir
@@ -30,6 +30,7 @@ module Boiler
       run_tasks
       prefix_files
       archive
+      move_package_to_cwd
       cleanup tmp
 
       file_name
@@ -44,7 +45,7 @@ module Boiler
       end
 
       # Make sure we have a place to copy to
-      FileUtils.mkdir_p(tmp)
+      FileUtils.mkdir_p tmp
 
       # Copy each file to tmp
       paths.each do |path|
@@ -163,15 +164,19 @@ module Boiler
     end
 
     def archive
-      cwd = Dir.pwd
-
-      if unraid?
-        `cd #{tmp} && makepkg -c y ../#{file_name}`
-      else
-        `cd #{tmp} && tar -czf ../#{file_name} .`
+      Dir.chdir tmp do
+        if unraid?
+          `makepkg -c y #{tmp_boiler_path}/#{file_name}`
+        else
+          `tar -czf #{tmp_boiler_path}/#{file_name} .`
+        end
       end
+    end
 
-      FileUtils.mv "#{tmp_boiler_path}/#{file_name}", cwd
+    def move_package_to_cwd
+      pkg = "#{tmp_boiler_path}/#{file_name}"
+      FileUtils.mv pkg, Dir.pwd if File.exists? pkg
+      package_path = File.join "#{Dir.pwd}", "#{file_name}"
     end
 
   private

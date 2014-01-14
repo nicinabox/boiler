@@ -17,7 +17,7 @@ module Boiler
     def initialize(*args)
       super
       updater = Updater.new
-      updater.check if Boiler::Base.unraid?
+      updater.check if unraid?
     end
 
     desc 'pack DIR', 'Pack a directory for distribution'
@@ -67,7 +67,7 @@ module Boiler
       package   = Package.new repo.working_directory
       file_name = package.build
 
-      if Boiler::Base.unraid?
+      if unraid?
         FileUtils.mkdir_p '/boot/extra'
         FileUtils.mv "#{file_name}", '/boot/extra'
 
@@ -82,7 +82,7 @@ module Boiler
 
     desc 'remove NAME', 'Remove (uninstall) a package'
     def remove(name)
-      if Boiler::Base.unraid?
+      if unraid?
         `removepkg #{name}`
       end
     end

@@ -1,4 +1,5 @@
 require 'boiler/base'
+require 'boiler/manifest'
 
 module Boiler
   class Package < Base
@@ -7,14 +8,15 @@ module Boiler
     source_root Dir.pwd
 
     attr_accessor :config, :tmp, :src, :name_to_param,
-                  :package_manifest, :file_name
+                  :manifest, :file_name
 
     def initialize(dir)
       @src              = File.expand_path dir
-      @package_manifest = load_manifest
-      @name_to_param    = to_simple_param package_manifest[:name]
+      @manifest         = Manifest.new src
       @config           = merge_defaults_with_manifest
-      @tmp              = "#{tmp_boiler}/#{target_file_name}"
+      @tmp              = "#{tmp_boiler_path}/#{target_file_name}"
+
+      @name_to_param    = to_simple_param manifest.name
       @file_name        = full_target_file_name
 
       # For Thor
@@ -164,84 +166,19 @@ module Boiler
     def archive
       cwd = Dir.pwd
 
-      if self.class.unraid?
+      if unraid?
         `cd #{tmp} && makepkg -c y ../#{target_file_name}.tgz`
       else
         `cd #{tmp} && tar -czf ../#{target_file_name}.tgz .`
       end
 
-      FileUtils.mv "#{tmp_boiler}/#{target_file_name}.tgz", cwd
+      FileUtils.mv "#{tmp_boiler_path}/#{target_file_name}.tgz", cwd
     end
 
   private
 
     def merge_defaults_with_manifest
-      d = defaults(package_manifest[:name])
-      d.deep_merge!(package_manifest)
-    end
-
-    def load_manifest
-      JSON.parse(File.read(manifest(src)), {
-        :symbolize_names => true
-      })
-    end
-
-    def defaults(name)
-      {
-        name: name,
-        version: '0.0.0',
-        description: "",
-        authors: [],
-        dependencies: {},
-        license: 'MIT',
-        arch: 'noarch',
-        build: 'unraid',
-        prefix: {
-          :"#{usr_local_path}" => [
-              'bin',
-              'lib',
-              'Gemfile*'
-          ],
-          :"#{configs_path}" => [
-            'config/*'
-          ],
-          :"#{docs_path}" => [
-            'README.*',
-            'LICENSE*'
-          ],
-          :"#{manifest_path}" => [
-            'boiler.json'
-          ]
-        },
-        ignore: [],
-        symlink: {},
-        tasks: [],
-        post_install: []
-      }
-    end
-
-    def env_path
-      "#{usr_local_path}/env"
-    end
-
-    def bin_path
-      "#{usr_local_path}/bin"
-    end
-
-    def usr_local_path
-      "usr/local/boiler/#{name_to_param}"
-    end
-
-    def docs_path
-      "usr/docs/#{name_to_param}"
-    end
-
-    def configs_path
-      "boot/plugins/custom/#{name_to_param}/_config"
-    end
-
-    def manifest_path
-      "var/log/boiler/#{name_to_param}"
+      manifest.defaults.deep_merge!(manifest.to_json)
     end
 
     def target_file_name

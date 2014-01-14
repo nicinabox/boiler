@@ -32,6 +32,6 @@ describe Boiler::Repo do
 
   it "creates a repo from just a url" do
     repo_no_name.clone
-    puts repo_no_name.name.should == 'trolley'
+    repo_no_name.name.should == 'trolley'
   end
 end

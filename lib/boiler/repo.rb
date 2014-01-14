@@ -7,15 +7,16 @@ module Boiler
     attr_accessor :name, :url, :version, :dest, :base
 
     def initialize(url, name=nil, version=nil)
-      @version = version
-      @dest    = tmp_repo(name)
-
       set_name_and_url(name, url)
+
+      @version = version
+      @dest    = tmp_repo
+
       reset_dir
     end
 
     def clone
-      @base = Git.clone(url, name, :path => tmp_boiler)
+      @base = Git.clone(url, name, :path => tmp_boiler_path)
     end
 
     def release
@@ -50,8 +51,8 @@ module Boiler
     end
 
     def reset_dir
-      FileUtils.rm_rf dest
-      FileUtils.mkdir_p tmp_boiler
+      cleanup dest
+      FileUtils.mkdir_p tmp_boiler_path
     end
 
     def git_protocol?(url)
@@ -62,8 +63,8 @@ module Boiler
       true if `git ls-remote #{url}`.include? 'master'
     end
 
-    def manifest_exists?(dest)
-      true if File.exists? manifest(dest)
+    def tmp_repo
+      "#{tmp_boiler_path}/#{name}"
     end
 
   end

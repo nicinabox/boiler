@@ -46,7 +46,10 @@ describe Boiler::Package do
   it "maps unique env variables" do
     env_vars = @package.map_env_vars
     env_vars.should == [
-      "VALID_PACKAGE_CONFIG_PATH=/boot/plugins/custom/valid-package/config"
+      "VALID_PACKAGE_CONFIG_PATH=/boot/plugins/custom/valid-package/config",
+      "VALID_PACKAGE_MANIFEST_PATH=/var/log/boiler/valid-package",
+      "VALID_PACKAGE_MANIFEST=/var/log/boiler/valid-package/boiler.json",
+      "VALID_PACKAGE_DOCS_PATH=/usr/docs/valid-package"
     ]
   end
 

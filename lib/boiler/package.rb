@@ -112,7 +112,10 @@ module Boiler
       target_config_dir = configs_path.gsub('_config', 'config')
 
       [
-        "#{name}_CONFIG_PATH=/#{target_config_dir}"
+        "#{name}_CONFIG_PATH=/#{target_config_dir}",
+        "#{name}_MANIFEST_PATH=/#{manifest_path}",
+        "#{name}_MANIFEST=/#{manifest_path}/boiler.json",
+        "#{name}_DOCS_PATH=/#{docs_path}"
       ]
     end
 

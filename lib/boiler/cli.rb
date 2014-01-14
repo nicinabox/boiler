@@ -130,9 +130,15 @@ module Boiler
 
     desc 'list [NAME]', 'List installed packages'
     def list(name=nil)
-      files = installed_packages("#{name}*")
-      configs = files.map { |f| JSON.parse File.read(f) }
-      print_table configs.map { |c| [c['name'], c['version'], c['description']] }
+      dirs    = base.installed "#{name}*"
+      manifests = dirs.map { |dir|
+        Manifest.new dir
+      }
+
+      print_table manifests.map { |manifest|
+        c = manifest.to_json
+        [c[:name], c[:version], c[:description]]
+      }
     end
 
     desc 'info NAME', 'Get info on installed package'

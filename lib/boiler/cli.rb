@@ -10,12 +10,17 @@ require 'boiler/version'
 module Boiler
   class CLI < Thor
     include HTTParty
+    include Boiler::Helpers
 
     base_uri 'http://boiler-registry.herokuapp.com'
     format :json
 
+    attr_accessor :base
+
     def initialize(*args)
       super
+      @base = Base.new
+
       updater = Updater.new
       updater.check if unraid?
     end
@@ -125,24 +130,26 @@ module Boiler
 
     desc 'list [NAME]', 'List installed packages'
     def list(name=nil)
-      files = installed_packages(name)
+      files = installed_packages("#{name}*")
       configs = files.map { |f| JSON.parse File.read(f) }
       print_table configs.map { |c| [c['name'], c['version'], c['description']] }
     end
 
     desc 'info NAME', 'Get info on installed package'
     def info(name)
-      # FIX: Update for new classes
-      packages = installed_packages("#{name}*")
-      if packages
-        config = JSON.parse File.read packages.first
+      package = base.installed(name)
+
+      if package.any?
+        manifest = Manifest.new package.first
+        config   = manifest.to_json
 
         keys = %w(name version description license authors)
-        keys.each do |key|
-          value = config[key]
-          value = value.join(', ') if value.is_a? Array
-          two_columns "#{key.capitalize}:", value if value
-        end
+        package_info = keys.map { |k|
+          [k.capitalize, config[k.to_sym]] if config[k.to_sym]
+        }.compact
+
+        print_table package_info
+
       else
         status "No package named #{name}"
       end

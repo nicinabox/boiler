@@ -20,11 +20,6 @@ module Boiler
     end
     module_function :unraid?
 
-    def installed_packages(name)
-      wildcard = name ? "#{name}*" : "**"
-      Dir.glob("/var/log/boiler/#{wildcard}/boiler.json")
-    end
-
     def cleanup(dest)
       FileUtils.rm_rf dest
     end

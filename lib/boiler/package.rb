@@ -122,7 +122,9 @@ module Boiler
     def setup_post_install
       # Make sure we have a file
       unless File.exists? "#{tmp}/#{post_installer}"
-        create_file post_installer, verbose: false
+        create_file post_installer, verbose: false do
+          "#!/bin/bash\n"
+        end
       end
 
       # Collect everything to inject
@@ -130,7 +132,7 @@ module Boiler
       config[:post_install].unshift map_preserve_config_cmds
       config[:post_install].flatten!
 
-      prepend_to_file post_installer, verbose: false do
+      inject_into_file post_installer, verbose: false, after: "#!/bin/bash\n" do
         install_trolley +
         map_dependencies_with_trolley.join("\n") + "\n"
       end
@@ -201,6 +203,7 @@ module Boiler
     end
 
     def install_trolley
+      return '' if config[:name] == 'trolley'
       <<-code
 if [[ `command -v trolley` == "" ]]; then
   wget -qO- --no-check-certificate https://raw.github.com/nicinabox/trolley/master/install.sh | sh -

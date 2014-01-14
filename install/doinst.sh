@@ -1,3 +1,5 @@
+#!/bin/bash
+
 source /etc/bundlerc
 
 if ! grep -Fxq "source /etc/bundlerc" /etc/profile; then

@@ -8,16 +8,15 @@ module Boiler
     source_root Dir.pwd
 
     attr_accessor :config, :tmp, :src, :name_to_param,
-                  :manifest, :file_name
+                  :manifest
 
     def initialize(dir)
       @src              = File.expand_path dir
       @manifest         = Manifest.new src
       @config           = merge_defaults_with_manifest
-      @tmp              = "#{tmp_boiler_path}/#{target_file_name}"
+      @tmp              = "#{tmp_boiler_path}/#{abridged_file_name}"
 
       @name_to_param    = to_simple_param manifest.name
-      @file_name        = full_target_file_name
 
       # For Thor
       @options           = {}
@@ -167,12 +166,12 @@ module Boiler
       cwd = Dir.pwd
 
       if unraid?
-        `cd #{tmp} && makepkg -c y ../#{target_file_name}.tgz`
+        `cd #{tmp} && makepkg -c y ../#{file_name}`
       else
-        `cd #{tmp} && tar -czf ../#{target_file_name}.tgz .`
+        `cd #{tmp} && tar -czf ../#{file_name} .`
       end
 
-      FileUtils.mv "#{tmp_boiler_path}/#{target_file_name}.tgz", cwd
+      FileUtils.mv "#{tmp_boiler_path}/#{file_name}", cwd
     end
 
   private
@@ -181,8 +180,8 @@ module Boiler
       manifest.defaults.deep_merge!(manifest.to_json)
     end
 
-    def target_file_name
-      @target_file_name ||= [
+    def abridged_file_name
+      @abridged_file_name ||= [
         config[:name],
         config[:version],
         config[:arch],
@@ -190,8 +189,8 @@ module Boiler
       ].join('-')
     end
 
-    def full_target_file_name
-      target_file_name + '.tgz'
+    def file_name
+      abridged_file_name + '.tgz'
     end
 
     def install_trolley

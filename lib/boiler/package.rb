@@ -118,9 +118,8 @@ module Boiler
 
     def setup_post_install
       # Make sure we have a file
-      doinst = "install/doinst.sh"
-      unless File.exists? "#{tmp}/#{doinst}"
-        create_file doinst, verbose: false
+      unless File.exists? "#{tmp}/#{post_installer}"
+        create_file post_installer, verbose: false
       end
 
       # Collect everything to inject
@@ -128,12 +127,12 @@ module Boiler
       config[:post_install].unshift map_preserve_config_cmds
       config[:post_install].flatten!
 
-      prepend_to_file doinst, verbose: false do
+      prepend_to_file post_installer, verbose: false do
         install_trolley +
         map_dependencies_with_trolley.join("\n") + "\n"
       end
 
-      append_to_file doinst, verbose: false do
+      append_to_file post_installer, verbose: false do
         config[:post_install].join("\n") + "\n"
       end
     end

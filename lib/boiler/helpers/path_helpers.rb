@@ -8,6 +8,14 @@ module Boiler
       "#{usr_local_path}/env"
     end
 
+    def post_installer_path
+      "install"
+    end
+
+    def post_installer
+      "#{post_installer_path}/doinst.sh"
+    end
+
     def bin_path
       "#{usr_local_path}/bin"
     end

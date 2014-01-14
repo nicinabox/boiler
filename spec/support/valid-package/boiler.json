@@ -1,5 +1,5 @@
 {
-  "name": "boiler-hello",
+  "name": "valid-package",
   "version": "0.1.0",
   "description": "A test package",
   "dependencies": {

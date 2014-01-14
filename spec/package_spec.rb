@@ -1,8 +1,10 @@
 require 'boiler/package'
 
 describe Boiler::Package do
+  let(:path) { 'spec/support/valid-package' }
+
   before(:each) do
-    @package = Boiler::Package.new 'spec/support/boiler-hello'
+    @package = Boiler::Package.new path
     @package.copy_files_to_tmp
   end
 
@@ -11,7 +13,7 @@ describe Boiler::Package do
   end
 
   it "parses boiler.json" do
-    @package.config.should include name: 'boiler-hello'
+    @package.config.should include name: 'valid-package'
   end
 
   it "copies files to a temp directory" do
@@ -32,7 +34,7 @@ describe Boiler::Package do
   it "maps symlinks" do
     symlinks = @package.map_symlinks
     symlinks.should == [
-      "ln -sf /usr/local/boiler/boiler-hello/bin/hello /usr/local/bin/hello"
+      "ln -sf /usr/local/boiler/valid-package/bin/hello /usr/local/bin/hello"
     ]
   end
 
@@ -44,7 +46,7 @@ describe Boiler::Package do
   it "maps unique env variables" do
     env_vars = @package.map_env_vars
     env_vars.should == [
-      "BOILER_HELLO_CONFIG_PATH=/boot/plugins/custom/boiler-hello/config"
+      "VALID_PACKAGE_CONFIG_PATH=/boot/plugins/custom/valid-package/config"
     ]
   end
 
@@ -56,7 +58,7 @@ describe Boiler::Package do
 
   it "creates env file" do
     @package.setup_env
-    env_file = "#{@package.tmp}/usr/local/boiler/boiler-hello/env"
+    env_file = "#{@package.tmp}/usr/local/boiler/valid-package/env"
     File.exists?(env_file).should be_true
   end
 
@@ -69,7 +71,7 @@ describe Boiler::Package do
   it "prefixes files" do
     @package.prefix_files
     old_bin = "#{@package.tmp}/bin"
-    new_bin = "#{@package.tmp}/usr/local/boiler/boiler-hello/bin"
+    new_bin = "#{@package.tmp}/usr/local/boiler/valid-package/bin"
 
     File.exists?(old_bin).should be_false
     File.exists?(new_bin).should be_true
@@ -77,7 +79,7 @@ describe Boiler::Package do
 
   it "archives the tmp directory" do
     @package.archive
-    pkg = 'boiler-hello-0.1.0-noarch-unraid.tgz'
+    pkg = 'valid-package-0.1.0-noarch-unraid.tgz'
     File.exists?(pkg).should be_true
     FileUtils.rm pkg
   end

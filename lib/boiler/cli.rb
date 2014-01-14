@@ -41,7 +41,7 @@ module Boiler
 
     desc 'deploy DIR HOST', 'Pack and copy to an unRAID machine (for testing)'
     def deploy(dir, host)
-      path       = pack(dir)
+      path      = pack(dir)
       file_name = File.basename path
 
       status 'Copying'
@@ -130,7 +130,7 @@ module Boiler
 
     desc 'list [NAME]', 'List installed packages'
     def list(name=nil)
-      dirs    = base.installed "#{name}*"
+      dirs      = base.installed name
       manifests = dirs.map { |dir|
         Manifest.new dir
       }
@@ -179,6 +179,7 @@ module Boiler
 
     desc 'init [DIRECTORY]', 'Create a boiler.json in the specified directory'
     def init(directory = Dir.pwd)
+      # FIX: update for new classes
       path = File.expand_path(directory)
       config = manifest_wizard
 

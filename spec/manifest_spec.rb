@@ -1,13 +1,13 @@
 require 'boiler/manifest'
 
 describe Boiler::Manifest do
-  let(:path) { 'spec/support/boiler-hello' }
+  let(:path) { 'spec/support/valid-package' }
   let(:manifest) { Boiler::Manifest.new(path) }
 
   describe 'defaults' do
     it "returns simple defaults" do
       manifest.simple_defaults.should == {
-        name: 'boiler-hello',
+        name: 'valid-package',
         version: '0.1.0',
         authors: [],
         license: 'MIT',

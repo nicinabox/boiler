@@ -6,7 +6,7 @@ module Boiler
     include Boiler::PathHelpers
 
     def installed(name)
-      wildcard = name ? "#{name}" : "**"
+      wildcard = name ? "#{name}*" : "**"
       Dir.glob("/var/log/boiler/#{wildcard}")
     end
 

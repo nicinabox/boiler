@@ -8,4 +8,5 @@ gem 'crack'
 
 group :test do
   gem 'rspec'
+  gem 'fakefs'
 end

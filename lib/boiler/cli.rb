@@ -44,8 +44,9 @@ module Boiler
       file_name = File.basename path
 
       status 'Copying'
-
       `scp #{path} #{host}`
+
+      status 'Removing local package'
       FileUtils.rm path
 
       status "Your package was copied to #{host}/#{file_name}", :green

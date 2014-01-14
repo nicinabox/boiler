@@ -78,8 +78,8 @@ describe Boiler::Package do
   end
 
   it "archives the tmp directory" do
-    pending
     @package.archive
+    @package.move_package_to_cwd
     pkg = 'valid-package-0.1.0-noarch-unraid.tgz'
     File.exists?(pkg).should be_true
     FileUtils.rm pkg

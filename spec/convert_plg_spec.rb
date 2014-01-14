@@ -3,7 +3,6 @@ require 'boiler/convert_plg'
 describe Boiler::ConvertPlg do
   before(:each) do
     @package = Boiler::ConvertPlg.new 'spec/support/transmission_unplugged.plg'
-    # @package.copy_files_to_tmp
   end
 
   after(:each) do

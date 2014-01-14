@@ -22,29 +22,29 @@ module Boiler
 
     desc 'pack DIR', 'Pack a directory for distribution'
     def pack(dir)
-      name = File.basename File.expand_path dir
+      file_name = File.basename(File.expand_path(dir))
 
-      status "Packing #{name}"
+      status "Packing #{file_name}"
 
       package = Package.new dir
       name = package.build
 
-      pkg = "#{Dir.pwd}/#{name}"
-      status "Done! Your package is at #{pkg}", :green
-      pkg
+      path = "#{Dir.pwd}/#{name}"
+      status "Done! Your package is at #{path}", :green
+      path
     end
 
     desc 'deploy DIR HOST', 'Pack and copy to an unRAID machine (for testing)'
     def deploy(dir, host)
-      pkg = pack(dir)
-      name = File.basename pkg
+      path       = pack(dir)
+      file_name = File.basename path
 
       status 'Copying'
 
-      `scp #{pkg} #{host}`
-      FileUtils.rm pkg
+      `scp #{path} #{host}`
+      FileUtils.rm path
 
-      status "Your package was copied to #{host}/#{name}", :green
+      status "Your package was copied to #{host}/#{file_name}", :green
     end
 
     desc 'install NAME [VERSION]', 'Install a package by name'
@@ -82,65 +82,39 @@ module Boiler
 
     desc 'remove NAME', 'Remove (uninstall) a package'
     def remove(name)
-      if unraid?
-        `removepkg #{name}`
-      end
+      `removepkg #{name}` if unraid?
     end
 
     desc 'register NAME URL', 'Register a package'
     def register(name, url)
-      unless git_protocol? url
-        unless url = convert_to_git_protocol(url)
-          status 'Url must use git:// protocol', :red
-          abort
-        end
-      end
-
-      do_register = yes? '[yN]', 'Are you sure you want to register this package? '
-
-      unless do_register
+      unless yes? '[yN]', 'Are you sure you want to register this package? '
         status 'Not registering', :red
         abort
       end
 
       status "Validating #{name}"
 
-      unless public_repo? url
-        status 'Package must be a public repo', :red
+      repo = Repo.new url, name
+      message = repo.validate
+      if message
+        status message, :red
         abort
-      end
-
-      repo = clone_repo(name, url)
-      dest = repo.first.dir.to_s
-
-      unless manifest_exists? dest
-        status 'Package is missing boiler.json', :red
-        cleanup dest
-        abort
-      end
-
-      metadata = JSON.parse File.read manifest(dest)
-      required.each do |key, val|
-        if !metadata.has_key?(key) and !metadata[key].empty?
-          status "boiler.json requires #{key}", :red
-          abort
-        end
       end
 
       status "Registering"
+
       response = self.class.post('/packages',
         body: {
           name: name,
           url: url
         })
 
-      if response['errors']
-        response['errors'].each do |error|
-          status error, :red
-        end
-      else
-        status "Registered!", :green
+      response['errors'].each do |error|
+        status error, :red
+        abort
       end
+
+      status "Registered!", :green
     end
 
     desc 'search NAME', 'Search for packages'
@@ -158,6 +132,7 @@ module Boiler
 
     desc 'info NAME', 'Get info on installed package'
     def info(name)
+      # FIX: Update for new classes
       packages = installed_packages("#{name}*")
       if packages
         config = JSON.parse File.read packages.first

@@ -162,14 +162,16 @@ module Boiler
 
     desc 'open NAME', "Open a package's homepage"
     def open(name)
+      # Open code
       package = self.class.get("/packages/#{name}")
       url = package['url'].gsub(/^git/, 'http')
 
-      packages = installed_packages(name)
-
+      # Or open homepage, if available
+      packages = base.installed(name)
       if packages.any?
-        config = JSON.parse File.read packages
-        url = config['homepage'] if config['homepage'].present?
+        manifest = Manifest.new packages.first
+        config = manifest.to_json
+        url = config[:homepage] if config[:homepage].present?
       end
 
       status "Opening #{url}"

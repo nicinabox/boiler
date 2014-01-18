@@ -20,6 +20,10 @@ module Boiler
       "#{usr_local_path}/bin"
     end
 
+    def lib_path
+      "#{usr_local_path}/lib"
+    end
+
     def usr_local_path
       "usr/local/boiler/#{name_to_param}"
     end

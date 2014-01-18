@@ -2,6 +2,8 @@ require 'boiler/base'
 
 module Boiler
   class Manifest < Base
+    include Thor::Base
+    include Thor::Actions
 
     attr_accessor :path, :name, :name_to_param
 

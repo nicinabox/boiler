@@ -115,7 +115,9 @@ module Boiler
         "#{name}_CONFIG_PATH=/#{target_config_dir}",
         "#{name}_MANIFEST_PATH=/#{manifest_path}",
         "#{name}_MANIFEST=/#{manifest_path}/boiler.json",
-        "#{name}_DOCS_PATH=/#{docs_path}"
+        "#{name}_DOCS_PATH=/#{docs_path}",
+        "#{name}_BIN_PATH=/#{bin_path}",
+        "#{name}_LIB_PATH=/#{lib_path}"
       ]
     end
 

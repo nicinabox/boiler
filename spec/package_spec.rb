@@ -49,7 +49,9 @@ describe Boiler::Package do
       "VALID_PACKAGE_CONFIG_PATH=/boot/plugins/custom/valid-package/config",
       "VALID_PACKAGE_MANIFEST_PATH=/var/log/boiler/valid-package",
       "VALID_PACKAGE_MANIFEST=/var/log/boiler/valid-package/boiler.json",
-      "VALID_PACKAGE_DOCS_PATH=/usr/docs/valid-package"
+      "VALID_PACKAGE_DOCS_PATH=/usr/docs/valid-package",
+      "VALID_PACKAGE_BIN_PATH=/usr/local/boiler/valid-package/bin",
+      "VALID_PACKAGE_LIB_PATH=/usr/local/boiler/valid-package/lib"
     ]
   end
 

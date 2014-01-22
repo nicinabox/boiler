@@ -2,15 +2,15 @@ require 'boiler/cli'
 
 describe Boiler::CLI do
   before do
-   FakeFS.activate!
+    FakeFS.activate!
   end
 
   after do
-   FakeFS.deactivate!
-   FakeFS::FileSystem.clear
+    FakeFS.deactivate!
+    FakeFS::FileSystem.clear
   end
 
-  let(:cli) { Boiler::CLI.new  }
+  let(:cli) { Boiler::CLI.new }
 
   describe '#pack' do
     it 'packages a directory' do

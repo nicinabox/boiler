@@ -26,6 +26,7 @@ module Boiler
     def build
       copy_files_to_tmp
       setup_env
+      detect_gemfile
       setup_post_install
       run_tasks
       prefix_files
@@ -119,6 +120,12 @@ module Boiler
         "#{name}_BIN_PATH=/#{bin_path}",
         "#{name}_LIB_PATH=/#{lib_path}"
       ]
+    end
+
+    def detect_gemfile
+      if File.exists? "#{tmp}/Gemfile"
+        config[:post_install] << "bundle install --gemfile=/#{usr_local_path}/Gemfile --without=development test"
+      end
     end
 
     def setup_post_install

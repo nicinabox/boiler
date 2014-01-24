@@ -42,3 +42,12 @@
     line-height: 1;
   }
 }
+
+pre {
+  overflow: auto;
+  word-wrap: normal;
+  white-space: pre;
+  code {
+    white-space: pre;
+  }
+}

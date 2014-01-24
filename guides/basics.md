@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: guide
 title: Basics
 permalink: basics/
 excerpt: Use of common boiler commands

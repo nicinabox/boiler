@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: guide
 title: Registering
 permalink: registering/
 excerpt: Make your package available for anyone to install

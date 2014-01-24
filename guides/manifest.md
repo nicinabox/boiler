@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: guide
 title: Manifest
 permalink: manifest/
 excerpt: A reference for boiler.json

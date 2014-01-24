@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: guide
 title: Testing
 permalink: testing/
 excerpt: Test your package with a virtual machine

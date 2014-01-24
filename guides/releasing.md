@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: guide
 title: Releasing
 permalink: releasing/
 excerpt: Start with an idea, end with a distributable package for unRAID.

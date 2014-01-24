@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: guide
 title: Creating
 permalink: creating/
 excerpt: Start with an idea, end with a distributable package for unRAID

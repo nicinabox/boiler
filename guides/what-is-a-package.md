@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: guide
 title: What is a package?
 permalink: what-is-a-package/
 excerpt: Unpack the mystery behind what's in a package

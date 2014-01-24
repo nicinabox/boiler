@@ -1221,8 +1221,8 @@ pre code {
 .container {
   margin-right: auto;
   margin-left: auto;
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-left: 30px;
+  padding-right: 30px;
 }
 /* line 21, ../../../../.rvm/gems/ruby-1.9.3-p484@boiler/gems/bootstrap-sass-3.0.3.0/vendor/assets/stylesheets/bootstrap/_mixins.scss */
 .container:before, .container:after {
@@ -1236,26 +1236,26 @@ pre code {
 @media (min-width: 768px) {
   /* line 6, ../../../../.rvm/gems/ruby-1.9.3-p484@boiler/gems/bootstrap-sass-3.0.3.0/vendor/assets/stylesheets/bootstrap/_grid.scss */
   .container {
-    width: 750px;
+    width: 780px;
   }
 }
 @media (min-width: 992px) {
   /* line 6, ../../../../.rvm/gems/ruby-1.9.3-p484@boiler/gems/bootstrap-sass-3.0.3.0/vendor/assets/stylesheets/bootstrap/_grid.scss */
   .container {
-    width: 970px;
+    width: 1000px;
   }
 }
 @media (min-width: 1200px) {
   /* line 6, ../../../../.rvm/gems/ruby-1.9.3-p484@boiler/gems/bootstrap-sass-3.0.3.0/vendor/assets/stylesheets/bootstrap/_grid.scss */
   .container {
-    width: 1170px;
+    width: 1200px;
   }
 }
 
 /* line 21, ../../../../.rvm/gems/ruby-1.9.3-p484@boiler/gems/bootstrap-sass-3.0.3.0/vendor/assets/stylesheets/bootstrap/_grid.scss */
 .row {
-  margin-left: -15px;
-  margin-right: -15px;
+  margin-left: -30px;
+  margin-right: -30px;
 }
 /* line 21, ../../../../.rvm/gems/ruby-1.9.3-p484@boiler/gems/bootstrap-sass-3.0.3.0/vendor/assets/stylesheets/bootstrap/_mixins.scss */
 .row:before, .row:after {
@@ -1271,8 +1271,8 @@ pre code {
 .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1 {
   position: relative;
   min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-left: 30px;
+  padding-right: 30px;
 }
 
 /* line 734, ../../../../.rvm/gems/ruby-1.9.3-p484@boiler/gems/bootstrap-sass-3.0.3.0/vendor/assets/stylesheets/bootstrap/_mixins.scss */
@@ -2968,8 +2968,8 @@ textarea.input-lg, .input-group-lg > textarea.form-control,
 }
 /* line 360, ../../../../.rvm/gems/ruby-1.9.3-p484@boiler/gems/bootstrap-sass-3.0.3.0/vendor/assets/stylesheets/bootstrap/_forms.scss */
 .form-horizontal .form-group {
-  margin-left: -15px;
-  margin-right: -15px;
+  margin-left: -30px;
+  margin-right: -30px;
 }
 /* line 21, ../../../../.rvm/gems/ruby-1.9.3-p484@boiler/gems/bootstrap-sass-3.0.3.0/vendor/assets/stylesheets/bootstrap/_mixins.scss */
 .form-horizontal .form-group:before, .form-horizontal .form-group:after {
@@ -5143,8 +5143,8 @@ input[type="button"].btn-block {
 .navbar-collapse {
   max-height: 340px;
   overflow-x: visible;
-  padding-right: 15px;
-  padding-left: 15px;
+  padding-right: 30px;
+  padding-left: 30px;
   border-top: 1px solid transparent;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
   -webkit-overflow-scrolling: touch;
@@ -5190,8 +5190,8 @@ input[type="button"].btn-block {
 /* line 97, ../../../../.rvm/gems/ruby-1.9.3-p484@boiler/gems/bootstrap-sass-3.0.3.0/vendor/assets/stylesheets/bootstrap/_navbar.scss */
 .container > .navbar-header,
 .container > .navbar-collapse {
-  margin-right: -15px;
-  margin-left: -15px;
+  margin-right: -30px;
+  margin-left: -30px;
 }
 @media (min-width: 768px) {
   /* line 97, ../../../../.rvm/gems/ruby-1.9.3-p484@boiler/gems/bootstrap-sass-3.0.3.0/vendor/assets/stylesheets/bootstrap/_navbar.scss */
@@ -5246,7 +5246,7 @@ input[type="button"].btn-block {
 /* line 150, ../../../../.rvm/gems/ruby-1.9.3-p484@boiler/gems/bootstrap-sass-3.0.3.0/vendor/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-brand {
   float: left;
-  padding: 11px 15px;
+  padding: 11px 30px;
   font-size: 23px;
   line-height: 28px;
 }
@@ -5257,7 +5257,7 @@ input[type="button"].btn-block {
 @media (min-width: 768px) {
   /* line 162, ../../../../.rvm/gems/ruby-1.9.3-p484@boiler/gems/bootstrap-sass-3.0.3.0/vendor/assets/stylesheets/bootstrap/_navbar.scss */
   .navbar > .container .navbar-brand {
-    margin-left: -15px;
+    margin-left: -30px;
   }
 }
 
@@ -5265,7 +5265,7 @@ input[type="button"].btn-block {
 .navbar-toggle {
   position: relative;
   float: right;
-  margin-right: 15px;
+  margin-right: 30px;
   padding: 9px 10px;
   margin-top: 8px;
   margin-bottom: 8px;
@@ -5294,7 +5294,7 @@ input[type="button"].btn-block {
 
 /* line 207, ../../../../.rvm/gems/ruby-1.9.3-p484@boiler/gems/bootstrap-sass-3.0.3.0/vendor/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-nav {
-  margin: 5.5px -15px;
+  margin: 5.5px -30px;
 }
 /* line 210, ../../../../.rvm/gems/ruby-1.9.3-p484@boiler/gems/bootstrap-sass-3.0.3.0/vendor/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-nav > li > a {
@@ -5344,7 +5344,7 @@ input[type="button"].btn-block {
   }
   /* line 253, ../../../../.rvm/gems/ruby-1.9.3-p484@boiler/gems/bootstrap-sass-3.0.3.0/vendor/assets/stylesheets/bootstrap/_navbar.scss */
   .navbar-nav.navbar-right:last-child {
-    margin-right: -15px;
+    margin-right: -30px;
   }
 }
 
@@ -5361,9 +5361,9 @@ input[type="button"].btn-block {
 }
 /* line 281, ../../../../.rvm/gems/ruby-1.9.3-p484@boiler/gems/bootstrap-sass-3.0.3.0/vendor/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-form {
-  margin-left: -15px;
-  margin-right: -15px;
-  padding: 10px 15px;
+  margin-left: -30px;
+  margin-right: -30px;
+  padding: 10px 30px;
   border-top: 1px solid transparent;
   border-bottom: 1px solid transparent;
   -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -5391,7 +5391,7 @@ input[type="button"].btn-block {
   }
   /* line 313, ../../../../.rvm/gems/ruby-1.9.3-p484@boiler/gems/bootstrap-sass-3.0.3.0/vendor/assets/stylesheets/bootstrap/_navbar.scss */
   .navbar-form.navbar-right:last-child {
-    margin-right: -15px;
+    margin-right: -30px;
   }
 }
 
@@ -5440,8 +5440,8 @@ input[type="button"].btn-block {
   /* line 360, ../../../../.rvm/gems/ruby-1.9.3-p484@boiler/gems/bootstrap-sass-3.0.3.0/vendor/assets/stylesheets/bootstrap/_navbar.scss */
   .navbar-text {
     float: left;
-    margin-left: 15px;
-    margin-right: 15px;
+    margin-left: 30px;
+    margin-right: 30px;
   }
   /* line 369, ../../../../.rvm/gems/ruby-1.9.3-p484@boiler/gems/bootstrap-sass-3.0.3.0/vendor/assets/stylesheets/bootstrap/_navbar.scss */
   .navbar-text.navbar-right:last-child {
@@ -8523,11 +8523,29 @@ html, body {
   color: #999999;
 }
 
-/* line 17, ../../_sass/_layout.scss */
+/* line 16, ../../_sass/_layout.scss */
+#sidebar {
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  -webkit-transition: opacity 200ms ease-out;
+  transition: opacity 200ms ease-out;
+}
+/* line 19, ../../_sass/_layout.scss */
+#sidebar:hover {
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+/* line 22, ../../_sass/_layout.scss */
+#sidebar h4 {
+  font-size: 22px;
+  color: #aaa;
+}
+
+/* line 28, ../../_sass/_layout.scss */
 .guide-section {
   margin-bottom: 60px;
 }
-/* line 19, ../../_sass/_layout.scss */
+/* line 30, ../../_sass/_layout.scss */
 .guide-section h3 {
   margin-top: 20px;
   margin-bottom: 6px;
@@ -8578,7 +8596,7 @@ html, body {
   float: left;
   padding: 10px;
 }
-@media screen and (max-width: 750px) {
+@media screen and (max-width: 780px) {
   /* line 37, ../../_sass/_home.scss */
   #menu a {
     float: none;

@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: guide
 title: Install
 permalink: install/
 excerpt: How to install boiler on unRAID

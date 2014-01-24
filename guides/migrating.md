@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: guide
 title: Migrating
 permalink: migrating/
 excerpt: Migrate your existing plg plugins to boiler

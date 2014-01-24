@@ -16,7 +16,7 @@ $ boiler search tvnamer
 tvnamer  git://github.com/nicinabox/boiler-tvnamer.git
 ```
 
-To get list of all registerd packages, just leave out the search parameter.
+To get list of all registered packages just leave out the search parameter.
 
 ```bash
 $ boiler search

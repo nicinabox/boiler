@@ -3,7 +3,4 @@ layout: default
 title: Guides
 ---
 
-{% assign sorted_guides = site.categories.guides | sort: "path" %}
-{% for post in sorted_guides %}
-  {% include guide/excerpt.html %}
-{% endfor %}
+{% include guides_contents.html %}

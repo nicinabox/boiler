@@ -823,7 +823,7 @@ hr {
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-weight: 500;
+  font-weight: 700;
   line-height: 1.1;
   color: inherit;
 }
@@ -8469,6 +8469,19 @@ pre code {
   white-space: pre;
 }
 
+/* line 1, ../../_sass/_formatting.scss */
+h1, h2, h3 {
+  margin-top: 38px;
+  margin-bottom: 24px;
+}
+
+/* line 6, ../../_sass/_formatting.scss */
+h4 {
+  text-transform: uppercase;
+  font-weight: normal;
+  letter-spacing: 1px;
+}
+
 /* line 10, ../../../../.rvm/gems/ruby-1.9.3-p484@boiler/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/layout/_sticky-footer.scss */
 html, body {
   height: 100%;
@@ -8508,6 +8521,16 @@ html, body {
 #footer {
   padding: 40px 0;
   color: #999999;
+}
+
+/* line 17, ../../_sass/_layout.scss */
+.guide-section {
+  margin-bottom: 60px;
+}
+/* line 19, ../../_sass/_layout.scss */
+.guide-section h3 {
+  margin-top: 20px;
+  margin-bottom: 6px;
 }
 
 /* line 1, ../../_sass/_home.scss */

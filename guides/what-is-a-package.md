@@ -1,21 +1,21 @@
 ---
 layout: default
 title: What is a package?
-categories: guides
-excerpt: Unpack the mystery behind what's in a boiler package
+permalink: what-is-a-package/
+excerpt: Unpack the mystery behind what's in a package
 ---
 
 <p class="lead">
-  Simply put, Boiler packages are just Slackware packages, but with a layer of icing.
+  Boiler packages are just Slackware packages under the hood, and that's just a tarball.
 </p>
 
-This so-called icing is a set of conveniences, conventions, and tools that Boiler provides to make creating and consuming a package very simple.
+Boiler uses Slackware's pkgtools as a foundation and provides a set of conveniences, conventions, and tools to make creating and consuming a package very simple.
 
-Distributed packages are tarballs designed to be standalone-compatible with Slackware's native pkgtools.
+Distributed packages are tarballs designed to be standalone-compatible with Slackware's package system.
 
 A package can be anything you want to distribute. It could be a web app, a command line tool, daemon, or Slackware package that provides extra functionality to unRAID, like openssh. Think of them like the apps on your smartphone.
 
-## Package structure
+### Package structure
 
 This is a tree from the boiler package. Each package follows the same structure of organization.
 
@@ -37,7 +37,7 @@ This is a tree from the boiler package. Each package follows the same structure 
         │   └── version.rb
         └── boiler.rb
 
-## Special files
+### Special files
 
 There are some special files boiler looks for when creating a tarball.
 
@@ -50,6 +50,8 @@ If your project has config files, place them here.
 #### bin/\*, lib/\*, Gemfile\*
 
 Prefix: `/usr/local/boiler/NAME/`
+
+If your package uses a Gemfile, it will be detected and run automatically.
 
 #### install/doinst.sh
 
@@ -67,6 +69,6 @@ Prefix: `/usr/docs/NAME/`
 
 You should include a readme in your project detailing what your project is, how it install it, where to find configurations, etc.
 
-## The boiler.json
+### boiler.json
 
-See the [Specification Reference](/guides/specification-reference) for details.
+See the [Manifest reference](/guides/manifest) for details.

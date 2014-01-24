@@ -1,0 +1,6 @@
+{% for section in site.data.guides %}
+  <div class="guide-section">
+    <h4>{{ section.title }}</h4>
+    {% include guide_section.html items=section.guides %}
+  </div>
+{% endfor %}

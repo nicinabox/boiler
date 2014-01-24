@@ -1,0 +1,18 @@
+- title: Getting Started
+  guides:
+  - install
+  - basics
+  - migrating
+
+- title: Creating a package
+  guides:
+  - what-is-a-package
+  - creating
+  - testing
+  - releasing
+  - registering
+
+- title: Reference
+  guides:
+  - manifest
+

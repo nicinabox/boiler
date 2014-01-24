@@ -8512,40 +8512,45 @@ html, body {
   margin-top: -30px;
 }
 
-/* line 8, ../../_sass/_layout.scss */
+/* line 9, ../../_sass/_layout.scss */
+#hero h1, #hero h2 {
+  font-weight: 300;
+}
+
+/* line 14, ../../_sass/_layout.scss */
 #main {
   margin-bottom: 40px;
 }
 
-/* line 12, ../../_sass/_layout.scss */
+/* line 18, ../../_sass/_layout.scss */
 #footer {
   padding: 40px 0;
   color: #999999;
 }
 
-/* line 16, ../../_sass/_layout.scss */
+/* line 22, ../../_sass/_layout.scss */
 #sidebar {
   opacity: 0.5;
   filter: alpha(opacity=50);
   -webkit-transition: opacity 200ms ease-out;
   transition: opacity 200ms ease-out;
 }
-/* line 19, ../../_sass/_layout.scss */
+/* line 25, ../../_sass/_layout.scss */
 #sidebar:hover {
   opacity: 1;
   filter: alpha(opacity=100);
 }
-/* line 22, ../../_sass/_layout.scss */
+/* line 28, ../../_sass/_layout.scss */
 #sidebar h4 {
   font-size: 22px;
   color: #aaa;
 }
 
-/* line 28, ../../_sass/_layout.scss */
+/* line 34, ../../_sass/_layout.scss */
 .guide-section {
   margin-bottom: 60px;
 }
-/* line 30, ../../_sass/_layout.scss */
+/* line 36, ../../_sass/_layout.scss */
 .guide-section h3 {
   margin-top: 20px;
   margin-bottom: 6px;

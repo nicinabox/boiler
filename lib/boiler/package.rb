@@ -124,7 +124,7 @@ module Boiler
 
     def detect_gemfile
       if File.exists? "#{tmp}/Gemfile"
-        config[:post_install] << "bundle install --gemfile=/#{usr_local_path}/Gemfile --without=development test"
+        config[:post_install].unshift "bundle install --gemfile=/#{usr_local_path}/Gemfile --without=development test"
       end
     end
 

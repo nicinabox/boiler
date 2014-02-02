@@ -1,3 +1,4 @@
+require 'date'
 require 'boiler/base'
 
 module Boiler
@@ -23,9 +24,33 @@ module Boiler
   private
 
     def remote_version
-      response = HTTParty.get('https://api.github.com/repos/nicinabox/boiler/tags',
-                              :headers => { 'User-Agent' => 'boiler' })
-      response.first['name']
+      if cached_version
+        cached_version
+      else
+        response = HTTParty.get('https://api.github.com/repos/nicinabox/boiler/tags',
+                                :headers => { 'User-Agent' => 'boiler' })
+        cache_remote_version response.first['name']
+      end
+    end
+
+    def cache_remote_version(version)
+      File.open(cached_version_file, 'w') do |f|
+        f.write version
+      end
+      version
+    end
+
+    def cached_version
+      if File.exists? cached_version_file
+        # Read cached if file is newer
+        if File.mtime(cached_version_file) > Date.today.to_time
+          File.read(cached_version_file)
+        end
+      end
+    end
+
+    def cached_version_file
+      '/tmp/boiler_latest'
     end
   end
 end

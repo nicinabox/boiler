@@ -149,7 +149,13 @@ module Boiler
 
         keys = %w(name version description license authors)
         package_info = keys.map { |k|
-          [k.capitalize, config[k.to_sym]] if config[k.to_sym]
+          key = k.to_sym
+          if config[key]
+            if config[key].is_a? Array
+              config[key] = config[key].join(', ')
+            end
+            [k.capitalize, config[key]]
+          end
         }.compact
 
         print_table package_info

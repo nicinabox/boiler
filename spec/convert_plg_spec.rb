@@ -1,12 +1,18 @@
 require 'boiler/convert_plg'
 
 describe Boiler::ConvertPlg do
+
   before(:each) do
-    @package = Boiler::ConvertPlg.new 'spec/support/transmission_unplugged.plg'
+    FakeFS.activate!
+    support = 'spec/support'
+    plg = File.join support, "transmission_unplugged.plg"
+    FakeFS::FileSystem.clone support, "/#{support}"
+    @package = Boiler::ConvertPlg.new plg
   end
 
   after(:each) do
-    FileUtils.rm_rf 'spec/support/transmission_unplugged'
+    FakeFS.deactivate!
+    FakeFS::FileSystem.clear
   end
 
   describe 'mapping' do
@@ -59,12 +65,12 @@ describe Boiler::ConvertPlg do
   end
 
   it 'creates a new working directory' do
-    @package.copy_files_to_tmp
+    capture(:stdout) { @package.copy_files_to_tmp }
     File.exists?('spec/support/transmission_unplugged').should be_true
   end
 
   it 'creates individual files' do
-    @package.copy_files_to_tmp
+    capture(:stdout) { @package.copy_files_to_tmp }
 
     Dir.glob(File.join('spec/support/transmission_unplugged', '**', '*')).select { |file|
       File.file?(file)
@@ -72,7 +78,7 @@ describe Boiler::ConvertPlg do
   end
 
   it 'adds dependencies to config' do
-    @package.add_dependencies_to_config
+    capture(:stdout) { @package.add_dependencies_to_config }
     @package.config[:dependencies].should == {
       :"curl-7.21.4-i486-1"=>"http://slackware.cs.utah.edu/pub/slackware/slackware-13.37/slackware/n/curl-7.21.4-i486-1.txz",
       :"libevent-2.0.11-i486-1sl"=>"http://repository.slacky.eu/slackware-13.37/libraries/libevent/2.0.11/libevent-2.0.11-i486-1sl.txz",
@@ -83,8 +89,10 @@ describe Boiler::ConvertPlg do
   end
 
   it 'creates install/doinst.sh' do
-    @package.copy_files_to_tmp
-    @package.update_doinst
+    capture(:stdout) {
+      @package.copy_files_to_tmp
+      @package.update_doinst
+    }
     file = File.read 'spec/support/transmission_unplugged/install/doinst.sh'
     file.should == <<-CONTENTS
 /tmp/transmission-cleanup
@@ -93,7 +101,7 @@ describe Boiler::ConvertPlg do
   end
 
   it 'creates the manifest' do
-    @package.create_manifest
+    capture(:stdout) { @package.create_manifest }
     File.exists?('spec/support/transmission_unplugged/boiler.json').should be_true
   end
 end

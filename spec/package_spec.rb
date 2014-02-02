@@ -36,7 +36,7 @@ describe Boiler::Package do
   it "maps dependencies" do
     deps = @package.map_dependencies_with_trolley
     deps.should == [
-      "trolley install fake1 1.0.0",
+      "trolley install fake1 \"1.0.0\"",
       "trolley install http://example.com/fake2.tgz"
     ]
   end

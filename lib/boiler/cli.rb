@@ -176,7 +176,7 @@ module Boiler
       if packages.any?
         manifest = Manifest.new packages.first
         config = manifest.to_json
-        url = config[:homepage] if config[:homepage].present?
+        url = config[:homepage] unless config[:homepage].blank?
       end
 
       status "Opening #{url}"

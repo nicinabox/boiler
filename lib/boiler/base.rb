@@ -1,3 +1,5 @@
+require 'rubygems'
+require 'bundler'
 require 'boiler/helpers'
 
 module Boiler
@@ -13,11 +15,11 @@ module Boiler
   end
 end
 
+
 if Boiler::Helpers.unraid?
-  pwd = Dir.pwd
-  Dir.chdir File.expand_path('../..', __FILE__)
-  Bundler.setup(:default)
-  Dir.chdir pwd
+  Dir.chdir File.expand_path('../..', __FILE__) do
+    Bundler.setup(:default)
+  end
 else
   Bundler.setup(:default)
 end

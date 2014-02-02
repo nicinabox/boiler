@@ -52,7 +52,7 @@ module Boiler
 
     desc 'install NAME [VERSION]', 'Install a package by name'
     def install(name, version=nil)
-      status "Downloading #{name_or_url}"
+      status "Downloading #{name}"
 
       if url? name
         url  = name
@@ -67,7 +67,7 @@ module Boiler
       version = repo.release
 
       status "Packaging #{repo.name}"
-      package   = Package.new repo.working_directory
+      package   = Package.new base.dir.path
       file_name = package.build
 
       if unraid?

@@ -8,6 +8,7 @@ describe Boiler::CLI do
   after do
     FakeFS.deactivate!
     FakeFS::FileSystem.clear
+    FileUtils.rm_rf '/tmp/boiler'
   end
 
   let(:cli) { Boiler::CLI.new }
@@ -53,6 +54,33 @@ Name         valid-package
 Version      0.1.0
 Description  A test package
       output
+    end
+  end
+
+  describe '#install' do
+    before do
+      FakeFS.deactivate!
+      FakeFS::FileSystem.clear
+
+      allow(Boiler::CLI).to receive(:get) {
+        JSON.parse('
+            {
+              "id": 1,
+              "name": "trolley",
+              "url": "git://github.com/nicinabox/trolley.git",
+              "installs": 159
+              }
+          ')
+      }
+    end
+
+    it "won't install on non-unraid" do
+      output = capture(:stdout) { cli.install('trolley') }
+      output.should == <<-out.outdent
+        => Downloading trolley
+        => Packaging trolley
+        => Can't install. Not an unRAID machine.
+      out
     end
   end
 end

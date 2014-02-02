@@ -5,6 +5,7 @@ gem 'httparty'
 gem 'git'
 gem 'deep_merge'
 gem 'crack'
+gem 'outdent'
 
 group :test do
   gem 'rspec'

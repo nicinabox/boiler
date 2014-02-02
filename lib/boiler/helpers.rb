@@ -21,6 +21,7 @@ module Boiler
     module_function :unraid?
 
     def cleanup(dest)
+      return unless File.exists? dest
       FileUtils.rm_rf dest
     end
 

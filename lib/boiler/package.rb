@@ -70,7 +70,11 @@ module Boiler
           if /^http/ =~ version
             "trolley install #{version}"
           else
-            "trolley install #{pkg} #{version}"
+            if version.empty?
+              "trolley install #{pkg}"
+            else
+              "trolley install #{pkg} \"#{version}\""
+            end
           end
         end
       end

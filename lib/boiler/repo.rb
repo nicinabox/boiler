@@ -13,8 +13,7 @@ module Boiler
 
       @version  = version
       @path     = tmp_repo
-      @manifest = Manifest.new @path, @name
-
+      @manifest = Manifest.new path, name
       reset_dir
     end
 
@@ -71,9 +70,7 @@ module Boiler
     end
 
     def all_tags
-      base.lib.tags.sort { |x, y|
-        Gem::Version.new(x) <=> Gem::Version.new(y)
-      }
+      base.lib.tags
     end
 
     def reset_dir

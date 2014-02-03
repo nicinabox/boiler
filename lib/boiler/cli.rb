@@ -85,7 +85,12 @@ module Boiler
 
     desc 'remove NAME', 'Remove (uninstall) a package'
     def remove(name)
-      `removepkg #{name}` if unraid?
+      return unless unraid?
+
+      if yes? "Are you sure you want to remove #{name}?"
+        `removepkg #{name}`
+        status "Removed #{name}"
+      end
     end
 
     desc 'register NAME URL', 'Register a package'

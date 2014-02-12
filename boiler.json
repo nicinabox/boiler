@@ -18,7 +18,7 @@
     "binutils": "",
     "make": "",
     "automake": "",
-    "openssl": "> 1.0.1",
+    "openssl": "> 1.0",
     "infozip": "",
     "libyaml": "> 0",
     "zlib": "",

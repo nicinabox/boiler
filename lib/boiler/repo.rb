@@ -11,7 +11,7 @@ module Boiler
     def initialize(url, name=nil, version=nil)
       set_name_and_url(name, url)
 
-      @version  = version
+      @version  = parse_version(version)
       @path     = tmp_repo
       @manifest = Manifest.new path, name
       reset_dir
@@ -58,6 +58,14 @@ module Boiler
     end
 
   private
+
+    def parse_version(version)
+      if /head|latest|master/i =~ version
+        'master'
+      else
+        version
+      end
+    end
 
     def set_name_and_url(name, url)
       if name

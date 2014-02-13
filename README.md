@@ -8,7 +8,7 @@ Boiler is a tool to create, distribute, install, and update unRAID packages (plu
 
 ## Install for unRAID
 
-    wget -qO- --no-check-certificate https://raw.github.com/nicinabox/boiler/master/install.sh | sh -
+    curl -s http://getboiler.com/install | sh
 
 ## Usage
 

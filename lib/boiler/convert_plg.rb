@@ -6,7 +6,7 @@ module Boiler
     include Thor::Actions
     source_root Dir.pwd
 
-    attr_accessor :file, :base_file_name, :xml, :tmp, :manifest,
+    attr_accessor :file, :base_file_name, :xml, :tmp, :manifest, :config,
                   :plugin, :options
 
     def initialize(plg)
@@ -28,7 +28,7 @@ module Boiler
       copy_files_to_tmp
       fetch_assets
       update_doinst
-      @config.deep_merge! @manifest.wizard(@config)
+      config.deep_merge! @manifest.wizard(config)
       add_dependencies_to_manifest
       create_manifest
     end
@@ -76,7 +76,7 @@ module Boiler
     def add_dependencies_to_manifest
       map_dependencies.each do |url|
         dep = { :"#{dependency_name(url)}" => url }
-        @config[:dependencies].merge!(dep)
+        config[:dependencies].merge!(dep)
       end
     end
 
@@ -100,7 +100,7 @@ module Boiler
 
     def create_manifest
       create_file @manifest.file_path do
-        JSON.pretty_generate(@config)
+        JSON.pretty_generate(config)
       end
     end
 
@@ -110,7 +110,7 @@ module Boiler
         remote  = asset[dest.to_sym]
         dirname = File.dirname dest
 
-        `mkdir -p #{dirname} && wget -q #{remote} -O #{dest}`
+        `mkdir -p #{dirname} && wget -q --no-check-certificate #{remote} -O #{dest}`
       end
     end
 

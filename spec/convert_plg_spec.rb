@@ -1,3 +1,4 @@
+require 'boiler/manifest'
 require 'boiler/convert_plg'
 
 describe Boiler::ConvertPlg do
@@ -30,10 +31,14 @@ describe Boiler::ConvertPlg do
     it "maps assets to download" do
       assets = @package.map_assets
       assets.should == [
-        '--no-check-certificate https://github.com/downloads/Influencer/UNplugged/transmission.png',
-        '--no-check-certificate https://github.com/downloads/Influencer/UNplugged/device_status.png',
-        '--no-check-certificate https://github.com/downloads/Influencer/UNplugged/new_config.png',
-        '--no-check-certificate https://github.com/downloads/Influencer/UNplugged/information.png'
+        {:"/spec/support/transmission_unplugged/boot/config/plugins/transmission/transmission.png"=>
+         "https://github.com/downloads/Influencer/UNplugged/transmission.png"},
+        {:"/spec/support/transmission_unplugged/boot/config/plugins/images/device_status.png"=>
+         "https://github.com/downloads/Influencer/UNplugged/device_status.png"},
+        {:"/spec/support/transmission_unplugged/boot/config/plugins/images/new_config.png"=>
+         "https://github.com/downloads/Influencer/UNplugged/new_config.png"},
+        {:"/spec/support/transmission_unplugged/boot/config/plugins/images/information.png"=>
+         "https://github.com/downloads/Influencer/UNplugged/information.png"}
       ]
     end
 
@@ -78,7 +83,7 @@ describe Boiler::ConvertPlg do
   end
 
   it 'adds dependencies to config' do
-    capture(:stdout) { @package.add_dependencies_to_config }
+    capture(:stdout) { @package.add_dependencies_to_manifest }
     @package.config[:dependencies].should == {
       :"curl-7.21.4-i486-1"=>"http://slackware.cs.utah.edu/pub/slackware/slackware-13.37/slackware/n/curl-7.21.4-i486-1.txz",
       :"libevent-2.0.11-i486-1sl"=>"http://repository.slacky.eu/slackware-13.37/libraries/libevent/2.0.11/libevent-2.0.11-i486-1sl.txz",

@@ -4,7 +4,7 @@ gem 'thor', github: 'erikhuda/thor'
 gem 'httparty'
 gem 'git'
 gem 'deep_merge'
-gem 'crack'
+gem 'nokogiri'
 gem 'outdent'
 
 group :test do

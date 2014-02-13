@@ -1,7 +1,7 @@
 require 'httparty'
 require 'fileutils'
 require 'deep_merge'
-require 'crack'
+require 'nokogiri'
 require 'boiler/helpers/path_helpers'
 
 module Boiler

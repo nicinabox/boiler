@@ -6,16 +6,18 @@ module Boiler
     include Thor::Actions
     source_root Dir.pwd
 
-    attr_accessor :file, :base_file_name, :xml, :tmp, :config,
+    attr_accessor :file, :base_file_name, :xml, :tmp, :manifest,
                   :plugin, :options
 
     def initialize(plg)
       @file           = File.read plg
       @base_file_name = File.basename(plg).gsub(/\.plg$/, '')
-      @config         = defaults
-      @xml            = Crack::XML.parse(file)
-      @plugin         = xml['PLUGIN']
       @tmp            = "#{File.dirname(File.expand_path(plg))}/#{base_file_name}"
+      @manifest       = Manifest.new(tmp)
+      @config         = @manifest.simple_defaults
+      @xml            = Nokogiri::XML(file)
+      @plugin         = xml.css('PLUGIN')
+      @files          = plugin.css('FILE')
 
       # For Thor
       @options           = {}
@@ -24,48 +26,57 @@ module Boiler
 
     def build
       copy_files_to_tmp
+      fetch_assets
       update_doinst
-      config.deep_merge! manifest_wizard(config)
-      add_dependencies_to_config
+      @config.deep_merge! @manifest.wizard(@config)
+      add_dependencies_to_manifest
       create_manifest
     end
 
     def map_dependencies
-      plugin['FILE'].map { |f|
-        if dependency_url? f['URL']
-          f['URL'].gsub('--no-check-certificate', '').strip
+      @files.map { |f|
+        if dependency_url? f.css('URL').text
+          f.css('URL').text
+            .gsub('--no-check-certificate', '')
+            .gsub('-q', '')
+            .strip
         end
       }.compact
     end
 
     def map_assets
-      plugin['FILE'].map { |f|
-        if dependency_asset? f['URL']
-          f['URL']
+      @files.map { |f|
+        if dependency_asset? f.css('URL').text
+          {
+            :"#{tmp}#{f['Name']}" => f.css('URL').text
+                                      .gsub('--no-check-certificate', '')
+                                      .gsub('-q', '')
+                                      .strip()
+          }
         end
       }.compact
     end
 
     def map_files
-      plugin['FILE'].map { |f|
+      @files.map { |f|
         unless dependency_asset? f['Name'] or
                dependency_url? f['Name']
 
-          { :"#{f['Name']}" => f['INLINE'] }
+          { :"#{f['Name']}" => f.css('INLINE').text }
         end
       }.compact
     end
 
     def map_scripts
-      plugin['FILE'].map { |f|
+      @files.map { |f|
         f['Name'] if f['Run'] == '/bin/bash'
       }.compact
     end
 
-    def add_dependencies_to_config
+    def add_dependencies_to_manifest
       map_dependencies.each do |url|
         dep = { :"#{dependency_name(url)}" => url }
-        config[:dependencies].merge!(dep)
+        @config[:dependencies].merge!(dep)
       end
     end
 
@@ -88,31 +99,22 @@ module Boiler
     end
 
     def create_manifest
-      create_file "#{tmp}/boiler.json" do
-        JSON.pretty_generate(config)
+      create_file @manifest.file_path do
+        JSON.pretty_generate(@config)
+      end
+    end
+
+    def fetch_assets
+      map_assets.each do |asset|
+        dest    = asset.keys.first.to_s
+        remote  = asset[dest.to_sym]
+        dirname = File.dirname dest
+
+        `mkdir -p #{dirname} && wget -q #{remote} -O #{dest}`
       end
     end
 
   private
-
-    def collect_dependencies(f)
-      dep = extract_dependency(f) || extract_asset(f)
-
-      # Add to dependencies
-      if dep.is_a? String
-        dep.gsub!('--no-check-certificate', '')
-        config[:dependencies].merge!(:"#{dependency_name(dep)}" => dep)
-
-      else
-        # Try to download remote assets
-        asset_dest = "#{tmp}#{dep[:dest]}"
-        asset      = File.basename asset_dest
-        dirname    = File.dirname asset_dest
-        fetch_url  = dep[:url]
-
-        `mkdir -p #{dirname} && wget -q #{fetch_url} -O #{asset_dest}`
-      end
-    end
 
     def create_package_file(data)
       path = data.keys.first.to_s
@@ -127,17 +129,6 @@ module Boiler
     def dependency_name(url)
       basename = File.basename url
       basename.gsub(/\.\S{3}$/, '')
-    end
-
-    def defaults
-      {
-        name: base_file_name,
-        version: '0.1.0',
-        authors: [],
-        license: 'MIT',
-        dependencies: {},
-        post_install: []
-      }
     end
 
     def extract_dependency(f)

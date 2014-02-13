@@ -217,10 +217,10 @@ module Boiler
 
     def install_trolley
       return '' if config[:name] == 'trolley'
-      <<-code
-if [[ `command -v trolley` == "" ]]; then
-  wget -qO- --no-check-certificate https://raw.github.com/nicinabox/trolley/master/install.sh | sh -
-fi
+      <<-code.outdent
+        if [[ `command -v trolley` == "" ]]; then
+          wget -qO- --no-check-certificate https://raw.github.com/nicinabox/trolley/master/install.sh | sh -
+        fi
       code
     end
 
